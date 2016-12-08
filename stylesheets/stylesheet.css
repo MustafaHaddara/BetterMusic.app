@@ -58,4 +58,33 @@ html, body {
 	width: 375px;
 	border-bottom: 1px solid #000000;
 	border-top: 1px solid #000000;
+	overflow: auto;
+}
+
+#mini-bar-album-art {
+	min-width: 48px;
+}
+
+#mini-bar-song-title {
+	font-size: 14pt;
+	font-weight: bold;
+	max-width: 239px;
+	max-height: 26px;
+}
+
+#mini-bar-song-details {
+	font-size: 12pt;
+	max-width: 239px;
+	max-height: 22px;
+}
+
+#mini-bar-play-button {
+	width: 44px;
+	float: right;
+	display: inline-block;
+}
+
+#mini-bar-next-button {
+	width: 44px;
+	float: right;
 }
