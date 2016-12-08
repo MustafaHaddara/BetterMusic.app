@@ -4,14 +4,14 @@ html, body {
 }
 
 #phone-screen-container {
-	width: 375px;
-	height: 667px;
+	width: 375pt;
+	height: 667pt;
 	background-color: #AAAAAA;
 }
 
 #tab-bar {
 	margin: 0;
-	height: 49px;
+	height: 49pt;
 	display: block;
 	list-style: none;
     padding: 0;
@@ -20,10 +20,11 @@ html, body {
 #tab-bar > li {
 	margin: 0;
 	padding: 0;
-	width: 74px;
-	height: 49px;
+	width: calc(100% / 5 - 1px);
+	height: 49pt;
 	display: inline-block;
 	border: 0;
+
 }
 
 #tab-bar > li + li {
@@ -31,13 +32,13 @@ html, body {
 }
 
 #header {
-	height: 64px;
-	width: 375px;
+	height: 40pt;
+	width: 100%;
 	border-bottom: 1px solid #000000;
 }
 
 #list-view {
-	height: 503px;
+	height: calc(667pt - 20pt - 49pt - 48pt - 40pt - 3pt);
 	margin: 0;
 	padding: 0;
 	display: block;
@@ -47,15 +48,18 @@ html, body {
 }
 
 #list-view > li {
-	width: 375px;
-	height: 25px;
+	width: calc(100% - 2*15pt);
+	height: 43pt;
 	display: block;
 	border-bottom: 1px solid #000000;
+	padding-left: 15pt;
+	padding-right: 15pt;
+	vertical-align: middle;
 }
 
 #mini-bar {
-	height: 48px;
-	width: 375px;
+	height: 48pt;
+	width: 100%;
 	border-bottom: 1px solid #000000;
 	border-top: 1px solid #000000;
 	overflow: auto;
@@ -90,4 +94,13 @@ html, body {
 #mini-bar-next-button {
 	width: 44px;
 	float: right;
+}
+
+#now-playing-view {
+	display: none;
+}
+
+#status-bar {
+	height: 20pt;
+	width: 100%;
 }
