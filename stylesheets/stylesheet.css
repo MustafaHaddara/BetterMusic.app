@@ -145,10 +145,12 @@ html, body {
 }
 
 #now-playing-playback-controls {
-	position: relative;
+	position: absolute;
 	display: flex;
 	justify-content: center;
 	z-index: 3;
+	top: calc(375pt/2 - 20pt);
+	width: 375pt;
 }
 
 #now-playing-playback-controls > button {
