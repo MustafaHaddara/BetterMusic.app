@@ -50,10 +50,13 @@ html, body {
 #list-view > li {
 	width: calc(100% - 2*15pt);
 	height: 43pt;
-	display: block;
+	display: table;
 	border-bottom: 1px solid #000000;
-	padding-left: 15pt;
-	padding-right: 15pt;
+	padding: 0 15pt;
+}
+
+#list-view > li > span {
+	display:table-cell;
 	vertical-align: middle;
 }
 
