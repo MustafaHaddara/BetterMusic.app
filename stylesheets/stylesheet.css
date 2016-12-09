@@ -70,7 +70,6 @@ html, body {
 
 #mini-bar-song-title {
 	font-size: 14pt;
-	font-weight: bold;
 	max-width: 239pt;
 	max-height: 26pt;
 }
@@ -79,6 +78,10 @@ html, body {
 	font-size: 12pt;
 	max-width: 239pt;
 	max-height: 22pt;
+}
+
+.song-title {
+	font-weight: bold;
 }
 
 #mini-bar-play-button {
@@ -163,4 +166,17 @@ html, body {
 
 #now-playing-prev-button > img {
 	transform: scaleX(-1);
+}
+
+#now-playing-song-info {
+	text-align: center;
+	margin-top: 10pt;
+}
+
+#now-playing-song-title {
+	font-size: 28pt;
+}
+
+#now-playing-song-details {
+	font-size: 22pt;
 }
