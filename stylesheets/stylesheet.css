@@ -180,3 +180,9 @@ html, body {
 #now-playing-song-details {
 	font-size: 22pt;
 }
+
+#now-playing-volume-slider {
+	width: 90%;
+	height: 30pt;
+	margin-left: 5%;
+}
