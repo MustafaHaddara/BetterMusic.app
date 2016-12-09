@@ -144,6 +144,29 @@ html, body {
 	z-index: 2;
 }
 
+#now-playing-progress-control {
+	position: absolute;
+	top: calc(10pt + 275pt); /* 14pt plus height of the b/w album art */
+	width: 375pt;
+	z-index: 3;
+}
+
+#now-playing-progress-control > div {
+	background-color: white;
+	border: 1pt black;
+	border-radius: 1pt;
+	font-size: 16pt;
+}
+
+#now-playing-progress-control-l {
+	display: inline;
+}
+
+#now-playing-progress-control-r {
+	display: inline;
+	float: right;
+}
+
 .icon-button {
 	background: rgba(0,0,0,0);
 	border: rgba(0,0,0,0);
@@ -175,7 +198,7 @@ html, body {
 	display: inline;
 	margin-left: 3pt;
 	margin-right: 3pt;
-	z-index: 3;
+	z-index: 4;
 }
 
 #now-playing-prev-button > img {
