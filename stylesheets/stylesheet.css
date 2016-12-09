@@ -20,6 +20,10 @@ html, body {
 	border-bottom: 1px solid #000000;
 }
 
+#nav-view {
+	display: none;
+}
+
 #list-view {
 	height: calc(667pt - 20pt - 49pt - 48pt - 40pt - 3pt);
 	margin: 0;
@@ -56,29 +60,34 @@ html, body {
 }
 
 #mini-bar-album-art {
-	min-width: 48px;
+	min-width: 48pt;
+}
+
+#mini-bar-album-art > img {
+	width: 48pt;
+	height: auto;
 }
 
 #mini-bar-song-title {
 	font-size: 14pt;
 	font-weight: bold;
-	max-width: 239px;
-	max-height: 26px;
+	max-width: 239pt;
+	max-height: 26pt;
 }
 
 #mini-bar-song-details {
 	font-size: 12pt;
-	max-width: 239px;
-	max-height: 22px;
+	max-width: 239pt;
+	max-height: 22pt;
 }
 
 #mini-bar-play-button {
-	width: 44px;
+	width: 44pt;
 	float: right;
 }
 
 #mini-bar-next-button {
-	width: 44px;
+	width: 44pt;
 	float: right;
 }
 
@@ -105,19 +114,53 @@ html, body {
 }
 
 #now-playing-view {
-	display: none;
-	width: 375px;
-	height: 667px;
+	/*display: none;*/
+	width: 375pt;
+	height: 667pt;
 }
 
 #now-playing-album-art {
-	height: 375px;
+	width: 100%;
+	height: 375pt;
 }
 
-#now-playing-progress-filter {
-	height: 100px;
+#now-playing-art-color {
+	width: 375pt;
+}
+
+#now-playing-art-bw {
+	filter: grayscale(100%);
+	width: 375pt;
+	height: 300pt;
+}
+
+#now-playing-art-color > img {
+	width: 375pt;
+	height: 375pt;
+}
+
+#now-playing-art-bw > img {
+	width: 375pt;
+	position: absolute;
+	top: 20pt; /* same as status bar */
+	clip: rect(0, 375pt, 275pt, 0); /*top, right, bottom, left*/
+	/*clipping rectange has same width (ie right side) as image width*/
+	/*clipping rectange bottom is equal to the height (which decreases as time goes on)*/
+}
+
+#now-playing-playback-controls {
+	display: flex;
+	justify-content: center;
 }
 
 #now-playing-playback-controls > div {
 	color: black;
+	display: inline;
+	margin-left: 3pt;
+	margin-right: 3pt;
+	z-index: 3;
+}
+
+#now-playing-prev-button > img {
+	transform: scaleX(-1);
 }
