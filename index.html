@@ -50,13 +50,13 @@
 
     <div id='now-playing-view'>
       <div id='now-playing-album-art'>
-        <div id='now-playing-art-color'><img src='images/album-art-big.jpg'></img></div>
-        <div id='now-playing-art-bw'><img src='images/album-art-big.jpg'></img></div>
+        <img id='now-playing-art-color' src='images/album-art-big.jpg'></img>
+        <img id='now-playing-art-bw' src='images/album-art-big.jpg'></img>
         <div id='now-playing-close-button'></div>
         <div id='now-playing-playback-controls'>
-          <div id='now-playing-prev-button'><img src='images/next-button-big.png'></img></div>
-          <div id='now-playing-play-button'><img src='images/play-button-big.png'></img></div>
-          <div id='now-playing-next-button'><img src='images/next-button-big.png'></img></div>
+          <button id='now-playing-prev-button'><img src='images/next-button-big.png'></img></button>
+          <button id='now-playing-play-button'><img src='images/play-button-big.png'></img></button>
+          <button id='now-playing-next-button'><img src='images/next-button-big.png'></img></button>
         </div>
       </div>
       <div id='now-playing-song-info'>
@@ -65,9 +65,9 @@
       </div>
       <input type="range" id='now-playing-volume-slider' min="0" max="10">
       <div id='now-playing-playback-options'>
-        <div id='now-playing-repeat-toggle'></div>
-        <div id='now-playing-queue-button'></div>
-        <div id='now-playing-shuffle-toggle'></div>
+        <button id='now-playing-repeat-toggle'>REPEAT</button>
+        <button id='now-playing-queue-button'>UP NEXT</button>
+        <button id='now-playing-shuffle-toggle'>SHUFFLE</button>
       </div>
     </div>
   </div>

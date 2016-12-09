@@ -129,39 +129,36 @@ html, body {
 
 #now-playing-art-color {
 	width: 375pt;
+	z-index: 1;
 }
 
 #now-playing-art-bw {
 	filter: grayscale(100%);
 	width: 375pt;
-	height: 300pt;
-}
-
-#now-playing-art-color > img {
-	width: 375pt;
-	height: 375pt;
-}
-
-#now-playing-art-bw > img {
-	width: 375pt;
 	position: absolute;
 	top: 20pt; /* same as status bar */
+	left: 0pt;
 	clip: rect(0, 375pt, 275pt, 0); /*top, right, bottom, left*/
 	/*clipping rectange has same width (ie right side) as image width*/
 	/*clipping rectange bottom is equal to the height (which decreases as time goes on)*/
+	z-index: 2;
 }
 
 #now-playing-playback-controls {
+	position: relative;
 	display: flex;
 	justify-content: center;
+	z-index: 3;
 }
 
-#now-playing-playback-controls > div {
+#now-playing-playback-controls > button {
 	color: black;
 	display: inline;
 	margin-left: 3pt;
 	margin-right: 3pt;
 	z-index: 3;
+	background: rgba(0,0,0,0);
+	border: rgba(0,0,0,0);
 }
 
 #now-playing-prev-button > img {
@@ -185,4 +182,9 @@ html, body {
 	width: 90%;
 	height: 30pt;
 	margin-left: 5%;
+}
+
+#now-playing-playback-options {
+	display: flex;
+	justify-content: space-between;
 }
