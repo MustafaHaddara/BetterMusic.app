@@ -144,7 +144,24 @@ html, body {
 	z-index: 2;
 }
 
+.icon-button {
+	background: rgba(0,0,0,0);
+	border: rgba(0,0,0,0);
+}
+
+#now-playing-close-button {
+	position: absolute;
+	top: -2pt;
+	left: 0;
+	width: 375pt;
+	font-size: 36pt;
+	z-index: 3;
+	color: rgba(0,0,0,0.5);
+	text-shadow: 0pt 8pt 0; /* FIXME ugly hack instead of finding a nice icon */
+}
+
 #now-playing-playback-controls {
+	/* FIXME: absolute position is an ugly hack */
 	position: absolute;
 	display: flex;
 	justify-content: center;
@@ -159,8 +176,6 @@ html, body {
 	margin-left: 3pt;
 	margin-right: 3pt;
 	z-index: 3;
-	background: rgba(0,0,0,0);
-	border: rgba(0,0,0,0);
 }
 
 #now-playing-prev-button > img {
