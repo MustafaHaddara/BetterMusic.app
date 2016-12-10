@@ -194,6 +194,7 @@ html, body {
 	z-index: 3;
 	top: calc(375pt/2 - 20pt);
 	width: 375pt;
+	transform: scale(0.5);
 }
 
 #now-playing-playback-controls > button {
