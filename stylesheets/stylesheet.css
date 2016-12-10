@@ -205,10 +205,6 @@ html, body {
 	z-index: 4;
 }
 
-#now-playing-prev-button > img {
-	transform: scaleX(-1);
-}
-
 #now-playing-song-info {
 	text-align: center;
 	margin-top: 10pt;
@@ -231,6 +227,7 @@ html, body {
 #now-playing-playback-options {
 	display: flex;
 	justify-content: space-between;
+	transform: scale(0.5);
 }
 
 #queue-view {
