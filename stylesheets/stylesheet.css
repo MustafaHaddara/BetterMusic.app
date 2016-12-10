@@ -237,3 +237,46 @@ html, body {
 #queue-close-button {
 	margin-top: -20pt;
 }
+
+#queue-mini-bar {
+	height: 48pt;
+	width: 100%;
+	border-bottom: 1px solid #000000;
+	border-top: 1px solid #000000;
+	overflow: auto;
+}
+
+#queue-mini-bar > div {
+	display: inline-block;
+}
+
+#queue-mini-bar-album-art {
+	min-width: 48pt;
+}
+
+#queue-mini-bar-album-art > img {
+	width: 48pt;
+	height: auto;
+}
+
+#queue-mini-bar-song-title {
+	font-size: 14pt;
+	max-width: 239pt;
+	max-height: 26pt;
+}
+
+#queue-mini-bar-song-details {
+	font-size: 12pt;
+	max-width: 239pt;
+	max-height: 22pt;
+}
+
+#queue-mini-bar-play-button {
+	width: 44pt;
+	float: right;
+}
+
+#queue-mini-bar-next-button {
+	width: 44pt;
+	float: right;
+}

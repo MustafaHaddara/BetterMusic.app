@@ -17,6 +17,7 @@ function play() {
 	// cosmetics
 	document.getElementById('now-playing-play-button').children[0].src = 'images/icons-png/icon-_0005_Pause.png'
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
+	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Playing music');
 }
@@ -25,6 +26,7 @@ function pause() {
 	// cosmetics
 	document.getElementById('now-playing-play-button').children[0].src = 'images/icons-png/icon-_0000_Play.png'
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
+	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
 	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Pausing music');
 }
@@ -57,7 +59,7 @@ function toggleRepeat() {
 	}
 	REPEAT = !REPEAT;
 	// TODO: FUNCTIONAL IMPLEMENTATION
-	console.log("repeat is " + (REPEAT? "on":"off"));
+	console.log('repeat is ' + (REPEAT? 'on':'off'));
 }
 
 function toogleShuffle() {
@@ -69,7 +71,7 @@ function toogleShuffle() {
 	}
 	SHUFFLE = !SHUFFLE;
 	// TODO: FUNCTIONAL IMPLEMENTATION
-	console.log("shuffle is " + (SHUFFLE? "on":"off"));
+	console.log('shuffle is ' + (SHUFFLE? 'on':'off'));
 }
 
 // EVENT LISTENERS
@@ -91,10 +93,14 @@ document.getElementById('queue-close-button').addEventListener('click', function
 }, false);
 
 // NAV VIEW
-document.getElementById('mini-bar-next-button').addEventListener('click', nextSong, false);
+document.getElementById('mini-bar-next-button').addEventListener('click', function(e) {
+	nextSong();
+	e.stopPropagation(); // don't let the click event propagate to the mini-bar
+}, false);
 
-document.getElementById('mini-bar-play-button').addEventListener('click', function() {
+document.getElementById('mini-bar-play-button').addEventListener('click', function(e) {
 	togglePlay();
+	e.stopPropagation();
 }, false);
 
 // NOW PLAYING VIEW
@@ -111,7 +117,15 @@ document.getElementById('now-playing-repeat-button').addEventListener('click', t
 document.getElementById('now-playing-shuffle-button').addEventListener('click', toogleShuffle, false);
 
 // QUEUE VIEW
-// TODO
+document.getElementById('queue-mini-bar-next-button').addEventListener('click', function(e) {
+	nextSong();
+	e.stopPropagation(); // don't let the click event propagate to the mini-bar
+}, false);
+
+document.getElementById('queue-mini-bar-play-button').addEventListener('click', function(e) {
+	togglePlay();
+	e.stopPropagation();
+}, false);
 
 // SEARCH VIEW
 // TODO
