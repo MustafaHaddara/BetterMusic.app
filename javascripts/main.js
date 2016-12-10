@@ -1,11 +1,7 @@
-// STYLES
-// document.getElementById('now-playing-pause-button').style.display = 'none';
-document.getElementById('now-playing-repeat-on-button').style.display = 'none';
-document.getElementById('now-playing-shuffle-on-button').style.display = 'none';
-
-
 // GLOBAL VARS
 PLAYING_MUSIC = false;
+REPEAT = false;
+SHUFFLE = false;
 
 // FUNCTIONS
 function switchView(viewName) {
@@ -18,17 +14,19 @@ function switchView(viewName) {
 }
 
 function play() {
-	console.log('Playing music');
-	// icons
+	// cosmetics
 	document.getElementById('now-playing-play-button').children[0].src = 'images/icons-png/icon-_0005_Pause.png'
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
+	// TODO: FUNCTIONAL IMPLEMENTATION
+	console.log('Playing music');
 }
 
 function pause() {
-	console.log('Pausing music');
-	// icons
+	// cosmetics
 	document.getElementById('now-playing-play-button').children[0].src = 'images/icons-png/icon-_0000_Play.png'
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
+	// TODO: FUNCTIONAL IMPLEMENTATION
+	console.log('Pausing music');
 }
 
 function togglePlay() {
@@ -41,11 +39,37 @@ function togglePlay() {
 }
 
 function nextSong() {
+	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Skipping to next song');
 }
 
 function prevSong() {
+	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Back to previous song');
+}
+
+function toggleRepeat() {
+	// cosmetics
+	if (REPEAT) {
+		document.getElementById('now-playing-repeat-button').children[0].src = 'images/icons-png/icon-_0010_RepeatOff.png';
+	} else {
+		document.getElementById('now-playing-repeat-button').children[0].src = 'images/icons-png/icon-_0011_RepeatOn.png';
+	}
+	REPEAT = !REPEAT;
+	// TODO: FUNCTIONAL IMPLEMENTATION
+	console.log("repeat is " + (REPEAT? "on":"off"));
+}
+
+function toogleShuffle() {
+	// cosmetics
+	if (SHUFFLE) {
+		document.getElementById('now-playing-shuffle-button').children[0].src = 'images/icons-png/icon-_0012_ShuffleOff.png'
+	} else {
+		document.getElementById('now-playing-shuffle-button').children[0].src = 'images/icons-png/icon-_0013_ShuffleOn.png'
+	}
+	SHUFFLE = !SHUFFLE;
+	// TODO: FUNCTIONAL IMPLEMENTATION
+	console.log("shuffle is " + (SHUFFLE? "on":"off"));
 }
 
 // EVENT LISTENERS
@@ -82,24 +106,12 @@ document.getElementById('now-playing-prev-button').addEventListener('click', pre
 
 document.getElementById('now-playing-next-button').addEventListener('click', nextSong, false);
 
-document.getElementById('now-playing-repeat-off-button').addEventListener('click', function() {
-	document.getElementById('now-playing-repeat-off-button').style.display = 'none';
-	document.getElementById('now-playing-repeat-on-button').style.display = 'unset';
-}, false);
+document.getElementById('now-playing-repeat-button').addEventListener('click', toggleRepeat, false);
 
-document.getElementById('now-playing-repeat-on-button').addEventListener('click', function() {
-	document.getElementById('now-playing-repeat-on-button').style.display = 'none';
-	document.getElementById('now-playing-repeat-off-button').style.display = 'unset';
-}, false);
-
-document.getElementById('now-playing-shuffle-off-button').addEventListener('click', function() {
-	document.getElementById('now-playing-shuffle-off-button').style.display = 'none';
-	document.getElementById('now-playing-shuffle-on-button').style.display = 'unset';
-}, false);
-
-document.getElementById('now-playing-shuffle-on-button').addEventListener('click', function() {
-	document.getElementById('now-playing-shuffle-on-button').style.display = 'none';
-	document.getElementById('now-playing-shuffle-off-button').style.display = 'unset';
-}, false);
+document.getElementById('now-playing-shuffle-button').addEventListener('click', toogleShuffle, false);
 
 // QUEUE VIEW
+// TODO
+
+// SEARCH VIEW
+// TODO
