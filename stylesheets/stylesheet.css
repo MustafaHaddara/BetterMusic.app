@@ -231,7 +231,7 @@ html, body {
 }
 
 #queue-view {
-	/*display: none;*/
+	display: none;
 }
 
 #queue-close-button {
