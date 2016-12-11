@@ -51,7 +51,7 @@ function play() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	// TODO: FUNCTIONAL IMPLEMENTATION
-	document.getElementById(NowPlayingSong.name).play();
+	document.getElementById(NowPlayingSong.id).play();
 	console.log('Playing music');
 }
 
@@ -61,7 +61,7 @@ function pause() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
 	// TODO: FUNCTIONAL IMPLEMENTATION
-	document.getElementById(NowPlayingSong.name).pause();
+	document.getElementById(NowPlayingSong.id).pause();
 	console.log('Pausing music');
 }
 
@@ -77,11 +77,11 @@ function togglePlay() {
 function nextSong() {
 	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Skipping to next song');
-	if (!(document.getElementById(NowPlayingSong.name).paused) && document.getElementById(NowPlayingSong.name).currentTime > 0) {
-		document.getElementById(NowPlayingSong.name).pause();
-		document.getElementById(NowPlayingSong.name).currentTime = 0;
+	if (!(document.getElementById(NowPlayingSong.id).paused) && document.getElementById(NowPlayingSong.id).currentTime > 0) {
+		document.getElementById(NowPlayingSong.id).pause();
+		document.getElementById(NowPlayingSong.id).currentTime = 0;
 		NowPlayingSong = song2;
-		document.getElementById(NowPlayingSong.name).play();	
+		document.getElementById(NowPlayingSong.id).play();	
 	} else {
 		NowPlayingSong = song2;
 	}
@@ -90,11 +90,11 @@ function nextSong() {
 function prevSong() {
 	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Back to previous song');
-	if (!(document.getElementById(NowPlayingSong.name).paused) && document.getElementById(NowPlayingSong.name).currentTime > 0) {
-		document.getElementById(NowPlayingSong.name).pause();
-		document.getElementById(NowPlayingSong.name).currentTime = 0;
+	if (!(document.getElementById(NowPlayingSong.id).paused) && document.getElementById(NowPlayingSong.id).currentTime > 0) {
+		document.getElementById(NowPlayingSong.id).pause();
+		document.getElementById(NowPlayingSong.id).currentTime = 0;
 		NowPlayingSong = song1;
-		document.getElementById(NowPlayingSong.name).play();	
+		document.getElementById(NowPlayingSong.id).play();	
 	} else {
 		NowPlayingSong = song1;
 	}
