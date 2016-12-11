@@ -19,6 +19,7 @@ function play() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	// TODO: FUNCTIONAL IMPLEMENTATION
+	document.getElementById('StereoLove').play();
 	console.log('Playing music');
 }
 
@@ -28,6 +29,7 @@ function pause() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
 	// TODO: FUNCTIONAL IMPLEMENTATION
+	document.getElementById('StereoLove').pause();
 	console.log('Pausing music');
 }
 

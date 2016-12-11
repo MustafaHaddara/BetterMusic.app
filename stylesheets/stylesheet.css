@@ -280,3 +280,7 @@ html, body {
 	width: 44pt;
 	float: right;
 }
+
+#StereoLove {
+	display: none;
+}
