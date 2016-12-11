@@ -3,19 +3,11 @@ var PLAYING_MUSIC = false;
 var REPEAT = false;
 var SHUFFLE = false;
 var LIST_VIEW_MODE = 'song'
+var NOW_PLAYING_SONG = 0;
 
-// var song1 = {id:'song-StereoLove', name:'Stereo Love', artist: 'Edward Maya ft. Alicia', album: '', genre:''};
-// var song2 = {id:'song-WereInHeaven', name:'We\'re in Heaven', artist: 'DJ Sammy', album: '', genre:''};
-var NowPlayingSong = 0;
-
-// var orderedListViews = [
-// 	orederedSongs = [song1, song2, song1, song1, song2],
-// 	orederedArtists = [song2, song1]
-// ];
-
-// document.addEventListener("DOMContentLoaded", function(event) {
-// 	document.getElementById('nav-view').insertBefore(generateListView(orderedListViews[0]), document.getElementById('nav-search-view'));
-// });
+document.addEventListener("DOMContentLoaded", function(event) {
+	filterBy('song'); // initial default state
+});
 
 // FUNCTIONS
 function switchView(viewName) {
@@ -40,7 +32,7 @@ function play() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	// functionality
-	document.getElementById(SONGS[NowPlayingSong].id).play();
+	document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
 	console.log('Playing music');
 }
 
@@ -50,7 +42,7 @@ function pause() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
 	// functionality
-	document.getElementById(SONGS[NowPlayingSong].id).pause();
+	document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
 	console.log('Pausing music');
 }
 
@@ -65,25 +57,25 @@ function togglePlay() {
 
 function nextSong() {
 	console.log('Skipping to next song');
-	if (!(document.getElementById(SONGS[NowPlayingSong].id).paused) && document.getElementById(SONGS[NowPlayingSong].id).currentTime > 0) {
-		document.getElementById(SONGS[NowPlayingSong].id).pause();
-		document.getElementById(SONGS[NowPlayingSong].id).currentTime = 0;
-		NowPlayingSong = 1;
-		document.getElementById(SONGS[NowPlayingSong].id).play();
+	if (!(document.getElementById(SONGS[NOW_PLAYING_SONG].id).paused) && document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime > 0) {
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
+		NOW_PLAYING_SONG = 1;
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
 	} else {
-		NowPlayingSong = 1;
+		NOW_PLAYING_SONG = 1;
 	}
 }
 
 function prevSong() {
 	console.log('Back to previous song');
-	if (!(document.getElementById(SONGS[NowPlayingSong].id).paused) && document.getElementById(SONGS[NowPlayingSong].id).currentTime > 0) {
-		document.getElementById(SONGS[NowPlayingSong].id).pause();
-		document.getElementById(SONGS[NowPlayingSong].id).currentTime = 0;
-		NowPlayingSong = 0;
-		document.getElementById(SONGS[NowPlayingSong].id).play();
+	if (!(document.getElementById(SONGS[NOW_PLAYING_SONG].id).paused) && document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime > 0) {
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
+		NOW_PLAYING_SONG = 0;
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
 	} else {
-		NowPlayingSong = 0;
+		NOW_PLAYING_SONG = 0;
 	}
 }
 
@@ -114,6 +106,7 @@ function toogleShuffle() {
 function filterBy(mode) {
 	// set the global mode (we'll use this for navigation)
 	LIST_VIEW_MODE = mode;
+	document.getElementById('nav-header').innerText = (mode + 's') ;
 	var key = (mode=='song'? 'name': mode);
 
 	// populate the listview with the list we created

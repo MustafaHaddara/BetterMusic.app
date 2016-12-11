@@ -14,10 +14,17 @@ html, body {
 	width: 100%;
 }
 
-#header {
+#nav-header {
 	height: 40pt;
-	width: 100%;
+	width: calc(100% - 15pt); /* subtract padding */
 	border-bottom: 1px solid #000000;
+	font-weight: bolder;
+	font-size: 24pt;
+	padding-left: 15pt; /* align with items in the nav-list-view */
+}
+
+#nav-header:first-letter {  /* CSS can do this O.o */
+	text-transform: capitalize;
 }
 
 #nav-view {
@@ -42,11 +49,6 @@ html, body {
 	border-bottom: 1px solid #000000;
 	padding: 0 15pt;
 }
-
-/*#nav-list-view > li > span {
-	display:table-cell;
-	vertical-align: middle;
-}*/
 
 #nav-search-view {
 	display: none;
