@@ -24,6 +24,7 @@ function switchSubView(viewName) {
 	document.getElementById('nav-search-view').style.display = 'none';
 
 	document.getElementById(viewName).style.display = 'block';
+	document.getElementById('nav-header').innerText = (viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
 }
 
 function play() {
@@ -124,6 +125,7 @@ function filterBy(mode) {
 		var song = buildSongListItem(song, LIST_VIEW_MODE);
 		listView.appendChild(song);
 	}
+	switchSubView('nav-list-view'); // go to library
 }
 
 function buildSongListItem(songObj, mode) {
@@ -182,7 +184,11 @@ document.getElementById('nav-tab-genre').addEventListener('click', function() {
 }, false);
 
 document.getElementById('nav-tab-search').addEventListener('click', function() {
-	switchSubView('nav-search-view')
+	switchSubView('nav-search-view'); // go to search view
+}, false);
+
+document.getElementById('search-view-lib-button').addEventListener('click', function() {
+	switchSubView('nav-list-view'); // go to library
 }, false);
 
 // NAV VIEW
