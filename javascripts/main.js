@@ -1,32 +1,21 @@
 // GLOBAL VARS
-PLAYING_MUSIC = false;
-REPEAT = false;
-SHUFFLE = false;
+var PLAYING_MUSIC = false;
+var REPEAT = false;
+var SHUFFLE = false;
+var LIST_VIEW_MODE = 'song'
 
-var song1 = {id:'song-StereoLove', name:'Stereo Love', artist: 'Edward Maya ft. Alicia', album: '', genre:''};
-var song2 = {id:'song-WereInHeaven', name:'We\'re in Heaven', artist: 'DJ Sammy', album: '', genre:''};
-var NowPlayingSong = song1;
+// var song1 = {id:'song-StereoLove', name:'Stereo Love', artist: 'Edward Maya ft. Alicia', album: '', genre:''};
+// var song2 = {id:'song-WereInHeaven', name:'We\'re in Heaven', artist: 'DJ Sammy', album: '', genre:''};
+var NowPlayingSong = 0;
 
-var orderedListViews = [
-	orederedSongs = [song1, song2, song1, song1, song2],
-	orederedArtists = [song2, song1]
-];
+// var orderedListViews = [
+// 	orederedSongs = [song1, song2, song1, song1, song2],
+// 	orederedArtists = [song2, song1]
+// ];
 
-function generateListView(songArray) {
-    var listView = document.createElement('ul');
-    listView.id = 'nav-list-view';
-
-    for(var i = 0; i < songArray.length; i++) {
-        var song = document.createElement('li');
-        song.appendChild(document.createTextNode(songArray[i].name + ' - ' + songArray[i].artist));
-        listView.appendChild(song);
-    }
-    return listView;
-}
-
-document.addEventListener("DOMContentLoaded", function(event) {
-    document.getElementById('nav-view').insertBefore(generateListView(orderedListViews[0]), document.getElementById('nav-search-view'));
-});
+// document.addEventListener("DOMContentLoaded", function(event) {
+// 	document.getElementById('nav-view').insertBefore(generateListView(orderedListViews[0]), document.getElementById('nav-search-view'));
+// });
 
 // FUNCTIONS
 function switchView(viewName) {
@@ -50,8 +39,8 @@ function play() {
 	document.getElementById('now-playing-play-button').children[0].src = 'images/icons-png/icon-_0005_Pause.png'
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
-	// TODO: FUNCTIONAL IMPLEMENTATION
-	document.getElementById(NowPlayingSong.id).play();
+	// functionality
+	document.getElementById(SONGS[NowPlayingSong].id).play();
 	console.log('Playing music');
 }
 
@@ -60,8 +49,8 @@ function pause() {
 	document.getElementById('now-playing-play-button').children[0].src = 'images/icons-png/icon-_0000_Play.png'
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
-	// TODO: FUNCTIONAL IMPLEMENTATION
-	document.getElementById(NowPlayingSong.id).pause();
+	// functionality
+	document.getElementById(SONGS[NowPlayingSong].id).pause();
 	console.log('Pausing music');
 }
 
@@ -75,28 +64,26 @@ function togglePlay() {
 }
 
 function nextSong() {
-	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Skipping to next song');
-	if (!(document.getElementById(NowPlayingSong.id).paused) && document.getElementById(NowPlayingSong.id).currentTime > 0) {
-		document.getElementById(NowPlayingSong.id).pause();
-		document.getElementById(NowPlayingSong.id).currentTime = 0;
-		NowPlayingSong = song2;
-		document.getElementById(NowPlayingSong.id).play();	
+	if (!(document.getElementById(SONGS[NowPlayingSong].id).paused) && document.getElementById(SONGS[NowPlayingSong].id).currentTime > 0) {
+		document.getElementById(SONGS[NowPlayingSong].id).pause();
+		document.getElementById(SONGS[NowPlayingSong].id).currentTime = 0;
+		NowPlayingSong = 1;
+		document.getElementById(SONGS[NowPlayingSong].id).play();
 	} else {
-		NowPlayingSong = song2;
+		NowPlayingSong = 1;
 	}
 }
 
 function prevSong() {
-	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Back to previous song');
-	if (!(document.getElementById(NowPlayingSong.id).paused) && document.getElementById(NowPlayingSong.id).currentTime > 0) {
-		document.getElementById(NowPlayingSong.id).pause();
-		document.getElementById(NowPlayingSong.id).currentTime = 0;
-		NowPlayingSong = song1;
-		document.getElementById(NowPlayingSong.id).play();	
+	if (!(document.getElementById(SONGS[NowPlayingSong].id).paused) && document.getElementById(SONGS[NowPlayingSong].id).currentTime > 0) {
+		document.getElementById(SONGS[NowPlayingSong].id).pause();
+		document.getElementById(SONGS[NowPlayingSong].id).currentTime = 0;
+		NowPlayingSong = 0;
+		document.getElementById(SONGS[NowPlayingSong].id).play();
 	} else {
-		NowPlayingSong = song1;
+		NowPlayingSong = 0;
 	}
 }
 
@@ -124,6 +111,49 @@ function toogleShuffle() {
 	console.log('shuffle is ' + (SHUFFLE? 'on':'off'));
 }
 
+function filterBy(mode) {
+	// set the global mode (we'll use this for navigation)
+	LIST_VIEW_MODE = mode;
+	var key = (mode=='song'? 'name': mode);
+
+	// populate the listview with the list we created
+	var listView = document.getElementById('nav-list-view');
+	listView.innerHTML = ""  // clear the list
+
+	// create the set of items to display (set so we don't display the same album/artist/genre twice)
+	var result = new Set();  // EC6 only
+	for(var i = 0; i < SONGS.length; i++) {  // TODO why do we only get one thing out?
+		var song = SONGS[i];
+		if (result.has(song[key])) {
+			continue;
+		}
+		result.add(song[key]);
+		var song = buildSongListItem(song, LIST_VIEW_MODE);
+		listView.appendChild(song);
+	}
+}
+
+function buildSongListItem(songObj, mode) {
+	var el = document.createElement('li');
+	if (mode == 'song') {
+		var title = document.createElement('span');
+		title.innerText = songObj['name'];
+		title.style.fontSize = '16pt';
+		title.style.fontWeight = 'Bold';
+		title.style.flexGrow = 2;
+		el.appendChild(title);
+
+		var artist = document.createElement('span');
+		artist.innerText = songObj['artist'];
+		artist.style.fontSize = '12pt';
+		el.appendChild(artist);
+		return el;
+	} else {
+		el.appendChild(document.createTextNode(songObj[mode]));
+	}
+	return el;
+}
+
 // EVENT LISTENERS
 // TRANSITIONS
 document.getElementById('now-playing-close-button').addEventListener('click', function() {
@@ -140,6 +170,22 @@ document.getElementById('now-playing-queue-button').addEventListener('click', fu
 
 document.getElementById('queue-close-button').addEventListener('click', function() {
 	switchView('now-playing-view');
+}, false);
+
+document.getElementById('nav-tab-artists').addEventListener('click', function() {
+	filterBy('artist');
+}, false);
+
+document.getElementById('nav-tab-songs').addEventListener('click', function() {
+	filterBy('song');
+}, false);
+
+document.getElementById('nav-tab-albums').addEventListener('click', function() {
+	filterBy('album');
+}, false);
+
+document.getElementById('nav-tab-genre').addEventListener('click', function() {
+	filterBy('genre');
 }, false);
 
 document.getElementById('nav-tab-search').addEventListener('click', function() {
@@ -180,6 +226,3 @@ document.getElementById('queue-mini-bar-play-button').addEventListener('click', 
 	togglePlay();
 	e.stopPropagation();
 }, false);
-
-// SEARCH VIEW
-// TODO
