@@ -3,6 +3,13 @@ PLAYING_MUSIC = false;
 REPEAT = false;
 SHUFFLE = false;
 
+var song1 = {queue:'1', name:'StereoLove'};
+var song2 = {queue:'2', name:'WereInHeaven'};
+var song3 = {queue:'3', name:'song2'};
+var NowPlayingSong = song1;
+
+//document.getElementById('song-title').innerText = NowPlayingSong.name;
+
 // FUNCTIONS
 function switchView(viewName) {
 	document.getElementById('nav-view').style.display = 'none';
@@ -26,7 +33,7 @@ function play() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	// TODO: FUNCTIONAL IMPLEMENTATION
-	document.getElementById('StereoLove').play();
+	document.getElementById(NowPlayingSong.name).play();
 	console.log('Playing music');
 }
 
@@ -36,7 +43,7 @@ function pause() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
 	// TODO: FUNCTIONAL IMPLEMENTATION
-	document.getElementById('StereoLove').pause();
+	document.getElementById(NowPlayingSong.name).pause();
 	console.log('Pausing music');
 }
 
@@ -52,11 +59,27 @@ function togglePlay() {
 function nextSong() {
 	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Skipping to next song');
+	if (!(document.getElementById(NowPlayingSong.name).paused) && document.getElementById(NowPlayingSong.name).currentTime > 0) {
+		document.getElementById(NowPlayingSong.name).pause();
+		document.getElementById(NowPlayingSong.name).currentTime = 0;
+		NowPlayingSong = song2;
+		document.getElementById(NowPlayingSong.name).play();	
+	} else {
+		NowPlayingSong = song2;
+	}
 }
 
 function prevSong() {
 	// TODO: FUNCTIONAL IMPLEMENTATION
 	console.log('Back to previous song');
+	if (!(document.getElementById(NowPlayingSong.name).paused) && document.getElementById(NowPlayingSong.name).currentTime > 0) {
+		document.getElementById(NowPlayingSong.name).pause();
+		document.getElementById(NowPlayingSong.name).currentTime = 0;
+		NowPlayingSong = song1;
+		document.getElementById(NowPlayingSong.name).play();	
+	} else {
+		NowPlayingSong = song1;
+	}
 }
 
 function toggleRepeat() {
