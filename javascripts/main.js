@@ -3,12 +3,16 @@ PLAYING_MUSIC = false;
 REPEAT = false;
 SHUFFLE = false;
 
-var song1 = {queue:'1', name:'StereoLove'};
-var song2 = {queue:'2', name:'WereInHeaven'};
-var song3 = {queue:'3', name:'song2'};
+var song1 = {queue:'1', id:'song-name-StereoLove', name:'Stereo Love', artist: 'Edward Maya ft. Alicia'};
+var song2 = {queue:'2', id:'song-name-WereInHeaven', name:'We\'re in Heaven', artist: 'DJ Sammy'};
+var song3 = {queue:'3', name:'song-name-WereInHeaven'};
+var song4 = {queue:'4', name:'song-name-song2'};
 var NowPlayingSong = song1;
 
-//document.getElementById('song-title').innerText = NowPlayingSong.name;
+document.addEventListener("DOMContentLoaded", function(event) {
+    document.getElementById('song1').innerText = song1.name + ' - ' + song1.artist;
+    document.getElementById('song2').innerText = song2.name + ' - ' + song2.artist;
+});
 
 // FUNCTIONS
 function switchView(viewName) {
