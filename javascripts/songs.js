@@ -4,13 +4,13 @@ var SONGS = [
         "name": "Stereo Love",
         "artist": "Edward Maya ft. Alicia",
         "album": "Stereo Love [Album]",
-        "genre": "Stereo Love [Genre]"
+        "genre": "Electronic"
     },
     {
         "id": "song-WereInHeaven",
-        "name": "We're in Heaven",
+        "name": "Heaven",
         "artist": "DJ Sammy",
-        "album": "Heaven album",
-        "genre": "Heaven genre"
+        "album": "Heaven",
+        "genre": "Dance"
     }
 ];

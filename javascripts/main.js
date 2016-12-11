@@ -104,13 +104,40 @@ function toogleShuffle() {
 	console.log('shuffle is ' + (SHUFFLE? 'on':'off'));
 }
 
+// TODO add a back button from search results
+function searchBy(searchTerm) {
+	// populate this listview
+	var listView = document.getElementById('nav-list-view');
+	listView.innerHTML = ""  // clear the list
+
+	// create the set of items to display (set so we don't display the same album/artist/genre twice)
+	var result = new Set();  // EC6 only
+	for(var i = 0; i < SONGS.length; i++) {  // TODO why do we only get one thing out?
+		var song = SONGS[i];
+		if (result.has(song['name'])) {
+			continue;
+		}
+		// really basic search implementation but it'll do
+		var st = searchTerm.toLowerCase()
+		if (song['name'].toLowerCase().startsWith(st) || 
+			song['album'].toLowerCase().startsWith(st) || 
+			song['artist'].toLowerCase().startsWith(st)) {
+			result.add(song['name']);
+			var song = buildSongListItem(song, 'song');
+			listView.appendChild(song);
+		}
+	}
+	switchSubView('nav-list-view'); // go to list view
+	document.getElementById('nav-header').innerText = "Search for: " + searchTerm ;
+}
+
 function filterBy(mode) {
 	// set the global mode (we'll use this for navigation)
 	LIST_VIEW_MODE = mode;
 	document.getElementById('nav-header').innerText = (mode + 's') ;
 	var key = (mode=='song'? 'name': mode);
 
-	// populate the listview with the list we created
+	// populate this listview
 	var listView = document.getElementById('nav-list-view');
 	listView.innerHTML = ""  // clear the list
 
@@ -192,6 +219,10 @@ document.getElementById('search-view-lib-button').addEventListener('click', func
 }, false);
 
 // NAV VIEW
+document.getElementById('search-button').addEventListener('click', function() {
+	searchBy(document.getElementById('search-input').value);
+}, false);
+
 document.getElementById('mini-bar-next-button').addEventListener('click', function(e) {
 	nextSong();
 	e.stopPropagation(); // don't let the click event propagate to the mini-bar
