@@ -3,15 +3,29 @@ PLAYING_MUSIC = false;
 REPEAT = false;
 SHUFFLE = false;
 
-var song1 = {queue:'1', id:'song-name-StereoLove', name:'Stereo Love', artist: 'Edward Maya ft. Alicia'};
-var song2 = {queue:'2', id:'song-name-WereInHeaven', name:'We\'re in Heaven', artist: 'DJ Sammy'};
-var song3 = {queue:'3', name:'song-name-WereInHeaven'};
-var song4 = {queue:'4', name:'song-name-song2'};
+var song1 = {id:'song-StereoLove', name:'Stereo Love', artist: 'Edward Maya ft. Alicia', album: '', genre:''};
+var song2 = {id:'song-WereInHeaven', name:'We\'re in Heaven', artist: 'DJ Sammy', album: '', genre:''};
 var NowPlayingSong = song1;
 
+var orderedListViews = [
+	orederedSongs = [song1, song2, song1, song1, song2],
+	orederedArtists = [song2, song1]
+];
+
+function generateListView(songArray) {
+    var listView = document.createElement('ul');
+    listView.id = 'nav-list-view';
+
+    for(var i = 0; i < songArray.length; i++) {
+        var song = document.createElement('li');
+        song.appendChild(document.createTextNode(songArray[i].name + ' - ' + songArray[i].artist));
+        listView.appendChild(song);
+    }
+    return listView;
+}
+
 document.addEventListener("DOMContentLoaded", function(event) {
-    document.getElementById('song1').innerText = song1.name + ' - ' + song1.artist;
-    document.getElementById('song2').innerText = song2.name + ' - ' + song2.artist;
+    document.getElementById('nav-view').insertBefore(generateListView(orderedListViews[0]), document.getElementById('nav-search-view'));
 });
 
 // FUNCTIONS
