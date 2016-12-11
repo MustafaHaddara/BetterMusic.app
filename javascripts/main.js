@@ -27,6 +27,13 @@ function switchSubView(viewName) {
 	document.getElementById('nav-header').innerText = (viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
 }
 
+function updateNowPlayingSongInformation() {
+	document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
+	document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
+	document.getElementById('mini-bar-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
+	document.getElementById('mini-bar-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
+}
+
 function play() {
 	// cosmetics
 	document.getElementById('now-playing-play-button').children[0].src = 'images/icons-png/icon-_0005_Pause.png'
@@ -35,6 +42,7 @@ function play() {
 	// functionality
 	document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
 	console.log('Playing music');
+	updateNowPlayingSongInformation();
 }
 
 function pause() {
@@ -45,6 +53,7 @@ function pause() {
 	// functionality
 	document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
 	console.log('Pausing music');
+	updateNowPlayingSongInformation();
 }
 
 function togglePlay() {
@@ -66,6 +75,7 @@ function nextSong() {
 	} else {
 		NOW_PLAYING_SONG = 1;
 	}
+	updateNowPlayingSongInformation();
 }
 
 function prevSong() {
@@ -78,6 +88,7 @@ function prevSong() {
 	} else {
 		NOW_PLAYING_SONG = 0;
 	}
+	updateNowPlayingSongInformation();
 }
 
 function toggleRepeat() {
