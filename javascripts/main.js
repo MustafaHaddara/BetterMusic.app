@@ -8,9 +8,16 @@ function switchView(viewName) {
 	document.getElementById('nav-view').style.display = 'none';
 	document.getElementById('now-playing-view').style.display = 'none';
 	document.getElementById('queue-view').style.display = 'none';
-	document.getElementById('search-view').style.display = 'none';
 
-	document.getElementById(viewName).style.display = 'unset';
+	document.getElementById(viewName).style.display = 'block';
+}
+
+function switchSubView(viewName) {
+	// used to switch between library tabs
+	document.getElementById('nav-list-view').style.display = 'none';
+	document.getElementById('nav-search-view').style.display = 'none';
+
+	document.getElementById(viewName).style.display = 'block';
 }
 
 function play() {
@@ -92,6 +99,10 @@ document.getElementById('now-playing-queue-button').addEventListener('click', fu
 
 document.getElementById('queue-close-button').addEventListener('click', function() {
 	switchView('now-playing-view');
+}, false);
+
+document.getElementById('nav-tab-search').addEventListener('click', function() {
+	switchSubView('nav-search-view')
 }, false);
 
 // NAV VIEW
