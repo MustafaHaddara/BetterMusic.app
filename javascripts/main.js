@@ -65,6 +65,20 @@ function togglePlay() {
 	PLAYING_MUSIC = !PLAYING_MUSIC;
 }
 
+function playSongById(songId) {
+	pause(); // stop current song
+	// find index of song
+	for (var i=0; i<SONGS.length; i++) {
+		if (SONGS[i].id == songId) {
+			NOW_PLAYING_SONG = i;
+			break;
+		}
+	}
+	// start from beginning
+	document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
+	play();
+}
+
 function nextSong() {
 	console.log('Skipping to next song');
 	if (!(document.getElementById(SONGS[NOW_PLAYING_SONG].id).paused) && document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime > 0) {
@@ -180,6 +194,9 @@ function buildSongListItem(songObj, mode) {
 		artist.innerText = songObj['artist'];
 		artist.style.fontSize = '12pt';
 		el.appendChild(artist);
+		el.addEventListener('click', function() {
+			playSongById(songObj['id']);
+		});
 		return el;
 	} else {
 		el.appendChild(document.createTextNode(songObj[mode]));
