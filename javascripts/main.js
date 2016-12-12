@@ -4,7 +4,7 @@ var REPEAT = false;
 var SHUFFLE = false;
 var LIST_VIEW_MODE = 'song'
 var NOW_PLAYING_SONG = 0;
-
+var SONG_QUEUE = [0,1,1,0,1];
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	filterBy('song'); // initial default state
@@ -28,14 +28,22 @@ function switchSubView(viewName) {
 	document.getElementById('nav-header').innerText = (viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
 }
 
+function updateNowPlayingSongInformation() {
+	document.getElementById('now-playing-song-title').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].name;
+	document.getElementById('now-playing-song-details').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].artist + ' - ' + SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].album;
+	document.getElementById('mini-bar-song-title').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].name;
+	document.getElementById('mini-bar-song-details').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].artist + ' - ' + SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].album;
+}
+
 function play() {
 	// cosmetics
 	document.getElementById('now-playing-play-button').children[0].src = 'images/icons-png/icon-_0005_Pause.png'
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	// functionality
-	document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
+	document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).play();
 	console.log('Playing music');
+	updateNowPlayingSongInformation();
 }
 
 function pause() {
@@ -44,8 +52,9 @@ function pause() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
 	// functionality
-	document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
+	document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).pause();
 	console.log('Pausing music');
+	updateNowPlayingSongInformation();
 }
 
 function togglePlay() {
@@ -57,32 +66,50 @@ function togglePlay() {
 	PLAYING_MUSIC = !PLAYING_MUSIC;
 }
 
+function playSongById(songId) {
+	pause(); // stop current song
+	// find index of song
+	for (var i=0; i<SONGS.length; i++) {
+		if (SONGS[i].id == songId) {
+			SONG_QUEUE = [i];
+			NOW_PLAYING_SONG = 0;
+			break;
+		}
+	}
+	// start from beginning
+	document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime = 0;
+	play();
+}
+
 function nextSong() {
 	console.log('Skipping to next song');
-	if (!(document.getElementById(SONGS[NOW_PLAYING_SONG].id).paused) && document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime > 0) {
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
-		NOW_PLAYING_SONG = 1;
+	if (!(document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).paused) && document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime > 0) {
+		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).pause();
+		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime = 0;
+		NOW_PLAYING_SONG++;
 		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
 		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
+		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).play();
 	} else {
-		NOW_PLAYING_SONG = 1;
+		NOW_PLAYING_SONG++;
 	}
+	updateNowPlayingSongInformation();
 }
 
 function prevSong() {
 	console.log('Back to previous song');
-	if (!(document.getElementById(SONGS[NOW_PLAYING_SONG].id).paused) && document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime > 0) {
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
-		NOW_PLAYING_SONG = 0;
+
+	if (!(document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).paused) && document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime > 0) {
+		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).pause();
+		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime = 0;
+		NOW_PLAYING_SONG--;
 		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
 		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
+		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).play();
 	} else {
-		NOW_PLAYING_SONG = 0;
+		NOW_PLAYING_SONG--;
 	}
+	updateNowPlayingSongInformation();
 }
 
 function toggleRepeat() {
@@ -174,6 +201,9 @@ function buildSongListItem(songObj, mode) {
 		artist.innerText = songObj['artist'];
 		artist.style.fontSize = '12pt';
 		el.appendChild(artist);
+		el.addEventListener('click', function() {
+			playSongById(songObj['id']);
+		});
 		return el;
 	} else {
 		el.appendChild(document.createTextNode(songObj[mode]));
@@ -185,82 +215,82 @@ function buildSongListItem(songObj, mode) {
 // TRANSITIONS
 document.getElementById('now-playing-close-button').addEventListener('click', function() {
 	switchView('nav-view');
-}, false);
+});
 
 document.getElementById('mini-bar').addEventListener('click', function() {
 	switchView('now-playing-view');
-}, false);
+});
 
 document.getElementById('now-playing-queue-button').addEventListener('click', function() {
 	switchView('queue-view');
-}, false);
+});
 
 document.getElementById('queue-close-button').addEventListener('click', function() {
 	switchView('now-playing-view');
-}, false);
+});
 
 document.getElementById('nav-tab-artists').addEventListener('click', function() {
 	filterBy('artist');
-}, false);
+});
 
 document.getElementById('nav-tab-songs').addEventListener('click', function() {
 	filterBy('song');
-}, false);
+});
 
 document.getElementById('nav-tab-albums').addEventListener('click', function() {
 	filterBy('album');
-}, false);
+});
 
 document.getElementById('nav-tab-genre').addEventListener('click', function() {
 	filterBy('genre');
-}, false);
+});
 
 document.getElementById('nav-tab-search').addEventListener('click', function() {
 	switchSubView('nav-search-view'); // go to search view
-}, false);
+});
 
 document.getElementById('search-view-lib-button').addEventListener('click', function() {
 	switchSubView('nav-list-view'); // go to library
-}, false);
+});
 
 // NAV VIEW
 document.getElementById('search-button').addEventListener('click', function() {
 	searchBy(document.getElementById('search-input').value);
-}, false);
+});
 
 document.getElementById('mini-bar-next-button').addEventListener('click', function(e) {
 	nextSong();
 	e.stopPropagation(); // don't let the click event propagate to the mini-bar
-}, false);
+});
 
 document.getElementById('mini-bar-play-button').addEventListener('click', function(e) {
 	togglePlay();
 	e.stopPropagation();
-}, false);
+});
 
 // NOW PLAYING VIEW
 document.getElementById('now-playing-play-button').addEventListener('click', function() {
 	togglePlay();
-}, false);
+});
 
-document.getElementById('now-playing-prev-button').addEventListener('click', prevSong, false);
+document.getElementById('now-playing-prev-button').addEventListener('click', prevSong);
 
-document.getElementById('now-playing-next-button').addEventListener('click', nextSong, false);
+document.getElementById('now-playing-next-button').addEventListener('click', nextSong);
 
-document.getElementById('now-playing-repeat-button').addEventListener('click', toggleRepeat, false);
+document.getElementById('now-playing-repeat-button').addEventListener('click', toggleRepeat);
 
-document.getElementById('now-playing-shuffle-button').addEventListener('click', toogleShuffle, false);
+document.getElementById('now-playing-shuffle-button').addEventListener('click', toogleShuffle);
 
 // QUEUE VIEW
 document.getElementById('queue-mini-bar-next-button').addEventListener('click', function(e) {
 	nextSong();
 	e.stopPropagation(); // don't let the click event propagate to the mini-bar
-}, false);
+});
 
 document.getElementById('queue-mini-bar-play-button').addEventListener('click', function(e) {
 	togglePlay();
 	e.stopPropagation();
-}, false);
+});
 
 var not_run = true;
 
