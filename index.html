@@ -18,7 +18,7 @@
     <div id='status-bar'></div>
 
     <div id='nav-view'>
-      <div id='nav-header'>Header</div>
+      <div id='nav-header'><button id='nav-header-back-button' class='icon-button'>Back</button><span id='nav-header-text'>Header</span></div>
       <ul id='nav-list-view'>
       </ul>
       <div id='nav-search-view'>
@@ -58,7 +58,7 @@
         <div id='mini-bar-play-button'><img src='images/play-button.png'></img></div>
       </div>
       <ul id='tab-bar'> <!-- Don't put these on the same line, HTML is awful go-->
-        <li id='nav-tab-artists'>Artists</li><li id='nav-tab-songs'>Songs</li><li id='nav-tab-albums'>Albums</li><li id='nav-tab-genre'>Genre</li><li id='nav-tab-search'>Search</li>
+        <li id='nav-tab-artists'></li><li id='nav-tab-songs'></li><li id='nav-tab-albums'></li><li id='nav-tab-genre'></li><li id='nav-tab-search'></li>
       </ul>
     </div>
 
@@ -84,7 +84,11 @@
         <div id='now-playing-song-title' class='song-title'>Bad Blood</div>
         <div id='now-playing-song-details-container'><span id='now-playing-song-details' class='song-details'>Taylor Swift - 1989</span></div>
       </div>
-      <input type="range" id='now-playing-volume-slider' min="0" max="100">
+      <div id='now-playing-volume-bar'>
+        <img id='now-playing-min-volume-icon' src='images/icons-png/icon-_0007_MinVolume.png'>
+        <input type="range" id='now-playing-volume-slider' min="0" max="100">
+        <img id='now-playing-max-volume-icon' src='images/icons-png/icon-_0008_MaxVolume.png'>
+      </div>
       <div id='now-playing-playback-options'>
         <button id='now-playing-repeat-button' class='icon-button'><img src='images/icons-png/icon-_0010_RepeatOff.png'></img></button>
         <button id='now-playing-queue-button'>UP NEXT</button>
@@ -105,21 +109,7 @@
         <div id='queue-mini-bar-next-button'><img src='images/next-button.png'></img></div>
         <div id='queue-mini-bar-play-button'><img src='images/play-button.png'></img></div>
       </div>
-      <ul id='list-view'>
-<!--         <li><span id"song1"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li>
-        <li><span id"song2"></span></li> -->
-      </ul>
+      <ul id='queue-list-view'></ul>
     </div>
   </div>
 

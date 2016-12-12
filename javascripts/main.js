@@ -4,13 +4,21 @@ var REPEAT = false;
 var SHUFFLE = false;
 var LIST_VIEW_MODE = 'song'
 var NOW_PLAYING_SONG = 0;
-var SONG_QUEUE = [0,1,2,1,0,1];
+var SONG_QUEUE = [0,1,1,0,1];
+var LIBRARY_STATES = [];
+
+var PLAY_NEXT_SONG_IN_QUEUE = false; 
+
+document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).addEventListener('ended', function() {
+	PLAY_NEXT_SONG_IN_QUEUE = true;
+	nextSong();
+});
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	filterBy('song'); // initial default state
 });
 
-var music_analog = createAudioOfLength(120);
+var music_analog = createAudioOfLength(247);
 
 function createAudioOfLength(time) {
 	var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -43,7 +51,12 @@ function switchSubView(viewName) {
 	document.getElementById('nav-search-view').style.display = 'none';
 
 	document.getElementById(viewName).style.display = 'block';
-	document.getElementById('nav-header').innerText = (viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
+	setHeader(viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
+}
+
+function goToSearchView() {
+	switchSubView('nav-search-view');
+	LIBRARY_STATES.push(function() { switchSubView('nav-search-view'); });
 }
 
 function updateNowPlayingSongInformation() {
@@ -60,7 +73,6 @@ function play() {
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	// functionality
 	music_analog.context.resume();
-	console.log('Playing music');
 	updateNowPlayingSongInformation();
 }
 
@@ -71,7 +83,6 @@ function pause() {
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
 	// functionality
 	music_analog.context.suspend();
-	console.log('Pausing music');
 	updateNowPlayingSongInformation();
 }
 
@@ -100,13 +111,14 @@ function playSongById(songId) {
 }
 
 function nextSong() {
-	if (!(music_analog.paused) && music_analog.currentTime > 0) {
+	if (!(music_analog.paused) && music_analog.currentTime > 0 || PLAY_NEXT_SONG_IN_QUEUE) {
 		music_analog.context.suspend();
 		music_analog.currentTime = 0;
 		NOW_PLAYING_SONG++;
 		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
 		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
 		document.getElementById('now-playing-song-details-container').scrollLeft = 0;
+		PLAY_NEXT_SONG_IN_QUEUE = false;
 		last_update = performance.now();
 		music_analog.context.resume();
 	} else {
@@ -181,13 +193,14 @@ function searchBy(searchTerm) {
 		}
 	}
 	switchSubView('nav-list-view'); // go to list view
-	document.getElementById('nav-header').innerText = "Search for: " + searchTerm ;
+	setHeader("Search for: " + searchTerm);
+	LIBRARY_STATES.push(function() { searchBy(searchTerm); });
 }
 
 // filter our songs according to a mode (ie. attribute)
 // optionally accept a secondFilter which will further restrict
 // our search results
-function filterBy(mode, secondFilter) {
+function filterBy(mode, secondFilter, omitFromHistory) {
 	// set the global mode (we'll use this for navigation)
 	LIST_VIEW_MODE = mode;
 	setHeader(mode + 's') ;
@@ -199,7 +212,7 @@ function filterBy(mode, secondFilter) {
 
 	// create the set of items to display (set so we don't display the same album/artist/genre twice)
 	var result = new Set();  // EC6 only
-	for(var i = 0; i < SONGS.length; i++) {  // TODO why do we only get one thing out?
+	for(var i = 0; i < SONGS.length; i++) {
 		var song = SONGS[i];
 		if (result.has(song[key])) {
 			continue;
@@ -214,6 +227,9 @@ function filterBy(mode, secondFilter) {
 		listView.appendChild(song);
 	}
 	switchSubView('nav-list-view'); // go to library
+	if (!omitFromHistory) {
+		LIBRARY_STATES.push(function() { filterBy(mode, secondFilter, true); }); // for back button
+	}
 }
 
 function buildSongListItem(songObj, mode) {
@@ -267,7 +283,24 @@ function buildSongListItem(songObj, mode) {
 }
 
 function setHeader(newText) {
-	document.getElementById('nav-header').innerText = newText;
+	document.getElementById('nav-header-text').innerText = newText;
+}
+
+function back() {
+	if (LIBRARY_STATES.length > 1) {
+		LIBRARY_STATES.pop(); // remove last state
+		LIBRARY_STATES[LIBRARY_STATES.length - 1]();
+	}
+}
+
+function buildQueue() {
+	var listView = document.getElementById('queue-list-view');
+	listView.innerHTML = ""  // clear the list
+	for(var i = 0; i < SONG_QUEUE.length; i++) {
+		var idx = SONG_QUEUE[i];
+		var song = buildSongListItem(SONGS[idx], LIST_VIEW_MODE);
+		listView.appendChild(song);
+	}
 }
 
 // EVENT LISTENERS
@@ -281,12 +314,15 @@ document.getElementById('mini-bar').addEventListener('click', function() {
 });
 
 document.getElementById('now-playing-queue-button').addEventListener('click', function() {
+	buildQueue();
 	switchView('queue-view');
 });
 
 document.getElementById('queue-close-button').addEventListener('click', function() {
 	switchView('now-playing-view');
 });
+
+document.getElementById('nav-header-back-button').addEventListener('click', back);
 
 document.getElementById('nav-tab-artists').addEventListener('click', function() {
 	filterBy('artist');
@@ -305,7 +341,7 @@ document.getElementById('nav-tab-genre').addEventListener('click', function() {
 });
 
 document.getElementById('nav-tab-search').addEventListener('click', function() {
-	switchSubView('nav-search-view'); // go to search view
+	goToSearchView();
 });
 
 document.getElementById('search-view-lib-button').addEventListener('click', function() {
@@ -367,22 +403,7 @@ if (typeof document.hidden !== "undefined") {
 
 var last_update = 0;
 
-function handleVisibilityChange() {
-	if (!document[hidden]) {
-		var len = node.seekable.end(0);
-		var percent = node.currentTime/len;
-		document.getElementById('now-playing-art-bw-container').style.height = Math.floor((1-percent)*375)+'pt';
-		document.getElementById('now-playing-progress-control').style.top = Math.floor(((1-percent)*375)+10) + 'pt';
-		var thing = (Math.round(node.currentTime - Math.floor(node.currentTime/60)*60) + '');
-		thing = Math.floor(node.currentTime/60) + ':' + (thing.length < 2? '0':'') + thing;
-		document.getElementById('now-playing-progress-control-l').innerText = thing;
-		document.getElementById('now-playing-progress-control-r').innerText = thing;
-		not_run = false;
-		node.volume = document.getElementById('now-playing-volume-slider').value/100;
-	}
-}
-
-function frameUpdate(ts) {
+function redrawStuff(ts) {
 	var node = music_analog;
 	if(!node.paused && !document[hidden]) {
 		var len = node.buffer.duration;
@@ -395,6 +416,14 @@ function frameUpdate(ts) {
 		document.getElementById('now-playing-progress-control-r').innerText = thing;
 		//node.volume = document.getElementById('now-playing-volume-slider').value/100;
 	}
+}
+
+function handleVisibilityChange() {
+	redrawStuff(performance.now());
+}
+
+function frameUpdate(ts) {
+	redrawStuff(ts);
 	if(document.getElementById('now-playing-song-details-container').offsetWidth < document.getElementById('now-playing-song-details-container').scrollWidth && (ts-last_update) > 200) {
 		if((document.getElementById('now-playing-song-details-container').offsetWidth+document.getElementById('now-playing-song-details-container').scrollLeft) >= document.getElementById('now-playing-song-details-container').scrollWidth && (ts-last_update) > 1000) {
 			document.getElementById('now-playing-song-details-container').scrollLeft = 0;
