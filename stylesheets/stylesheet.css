@@ -332,6 +332,7 @@ html, body {
 	width: 100%;
 	display: inline-block;
 	text-align: justify;
+	margin-top: 25pt;
 }
 
 #now-playing-volume-bar > img {
