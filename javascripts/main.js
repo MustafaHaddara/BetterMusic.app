@@ -5,6 +5,7 @@ var SHUFFLE = false;
 var LIST_VIEW_MODE = 'song'
 var NOW_PLAYING_SONG = 0;
 var SONG_QUEUE = [0,1,1,0,1];
+var LIBRARY_STATES = []
 
 var PLAY_NEXT_SONG_IN_QUEUE = false; 
 
@@ -32,7 +33,7 @@ function switchSubView(viewName) {
 	document.getElementById('nav-search-view').style.display = 'none';
 
 	document.getElementById(viewName).style.display = 'block';
-	document.getElementById('nav-header').innerText = (viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
+	setHeader(viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
 }
 
 function updateNowPlayingSongInformation() {
@@ -164,13 +165,13 @@ function searchBy(searchTerm) {
 		}
 	}
 	switchSubView('nav-list-view'); // go to list view
-	document.getElementById('nav-header').innerText = "Search for: " + searchTerm ;
+	setHeader("Search for: " + searchTerm);
 }
 
 // filter our songs according to a mode (ie. attribute)
 // optionally accept a secondFilter which will further restrict
 // our search results
-function filterBy(mode, secondFilter) {
+function filterBy(mode, secondFilter, omitFromHistory) {
 	// set the global mode (we'll use this for navigation)
 	LIST_VIEW_MODE = mode;
 	setHeader(mode + 's') ;
@@ -182,7 +183,7 @@ function filterBy(mode, secondFilter) {
 
 	// create the set of items to display (set so we don't display the same album/artist/genre twice)
 	var result = new Set();  // EC6 only
-	for(var i = 0; i < SONGS.length; i++) {  // TODO why do we only get one thing out?
+	for(var i = 0; i < SONGS.length; i++) {
 		var song = SONGS[i];
 		if (result.has(song[key])) {
 			continue;
@@ -197,6 +198,9 @@ function filterBy(mode, secondFilter) {
 		listView.appendChild(song);
 	}
 	switchSubView('nav-list-view'); // go to library
+	if (!omitFromHistory) {
+		LIBRARY_STATES.push({'mode':mode, 'secondFilter':secondFilter}); // for back button
+	}
 }
 
 function buildSongListItem(songObj, mode) {
@@ -250,7 +254,15 @@ function buildSongListItem(songObj, mode) {
 }
 
 function setHeader(newText) {
-	document.getElementById('nav-header').innerText = newText;
+	document.getElementById('nav-header-text').innerText = newText;
+}
+
+function back() {
+	if (LIBRARY_STATES.length > 1) {
+		LIBRARY_STATES.pop(); // remove last state
+		new_state = LIBRARY_STATES[LIBRARY_STATES.length - 1];
+		filterBy(new_state['mode'], new_state['secondFilter'], true);
+	}
 }
 
 // EVENT LISTENERS
@@ -270,6 +282,8 @@ document.getElementById('now-playing-queue-button').addEventListener('click', fu
 document.getElementById('queue-close-button').addEventListener('click', function() {
 	switchView('now-playing-view');
 });
+
+document.getElementById('nav-header-back-button').addEventListener('click', back);
 
 document.getElementById('nav-tab-artists').addEventListener('click', function() {
 	filterBy('artist');
