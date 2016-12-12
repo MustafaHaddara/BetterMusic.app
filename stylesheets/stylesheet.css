@@ -23,7 +23,11 @@ html, body {
 	padding-left: 15pt; /* align with items in the nav-list-view */
 }
 
-#nav-header:first-letter {  /* CSS can do this O.o */
+#nav-header-text {
+	display: inline-block;
+}
+
+#nav-header-text:first-letter {  /* CSS can do this O.o */
 	text-transform: capitalize;
 }
 
