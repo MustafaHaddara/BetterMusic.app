@@ -47,14 +47,29 @@ html, body {
 }
 
 #nav-list-view > li {
-	width: calc(100% - 2*15pt);
+	width: 100%;
 	margin-top: 21px;
 	margin-bottom: 21px;
 	/*height: 43pt;*/
 	display: flex;
 	border-bottom: 1px solid #000000;
-	padding: 0 15pt;
 }
+
+#nav-list-view > li > .swiper {
+	display: flex;
+	width: 100%;
+	position:relative;
+	z-index: 3;
+	padding: 0 15pt;
+	background-color: #FFF;
+}
+
+.button-thing {
+	position:absolute;
+	left:0;
+	z-index: 1;
+}
+
 
 #nav-search-view {
 	display: none;
@@ -264,9 +279,28 @@ html, body {
 #now-playing-progress-control > div {
 	background-color: white;
 	border: 1pt black;
-	border-radius: 1pt;
+	border-radius: 5pt;
+	border: 1pt solid #000000;
 	font-size: 16pt;
 }
+
+* {
+    -webkit-touch-callout:none;
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+}
+
+input, textarea {
+    -webkit-touch-callout:default;
+    -webkit-user-select:text;
+    -moz-user-select:text;
+    -ms-user-select:text;
+    user-select:text;
+}
+
+
 
 #now-playing-progress-control-l {
 	display: inline;

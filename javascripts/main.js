@@ -236,23 +236,84 @@ function filterBy(mode, secondFilter, omitFromHistory) {
 	}
 }
 
+var on_thing = undefined;
+var initial_pos = 0;
+var thing_open = false;
+var nop_mu = false;
+var mm = function(ev) {
+	if(on_thing !== undefined && !thing_open) {
+		var pos = (ev.clientX -initial_pos) ;
+		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
+		on_thing.style.left = (pos > sz?sz:(pos < 0?0:pos)) + 'px';
+	}
+}
+	var mu = function(ev) {
+		initial_pos = 0;
+		var pos = (ev.clientX -initial_pos);
+		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
+		if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
+			on_thing.style.left = sz + 'px'; // TODO: Smooth out
+			thing_open = true;
+		} else {
+			if(on_thing !== undefined) {
+			on_thing.style.left = '0px'; // TODO: Smooth out
+			on_thing = undefined;
+		}
+		}
+	nop_mu = false;
+	}
+
+function addToQueue(div) {
+	console.log(div);
+}
+
+document.addEventListener('mousemove', mm);
+document.addEventListener('mouseup', mu);
+
+document.addEventListener('mousedown', function() {
+	if(on_thing !== undefined) {
+		thing_open = false;
+		on_thing.style.left = '0px';
+		open_thing = undefined;
+		nop_mu = true;
+	}
+});
+
 function buildSongListItem(songObj, mode) {
 	var el = document.createElement('li');
 	var clickCallback = function() {
 		console.log('No callback implemented');
 	}
+	
 	if (mode == 'song') {
+		var div = document.createElement('div');
+		div.className = 'swiper';
 		var title = document.createElement('span');
 		title.innerText = songObj['name'];
 		title.style.fontSize = '16pt';
 		title.style.fontWeight = 'Bold';
 		title.style.flexGrow = 2;
-		el.appendChild(title);
+		div.appendChild(title);
 
 		var artist = document.createElement('span');
 		artist.innerText = songObj['artist'];
 		artist.style.fontSize = '12pt';
-		el.appendChild(artist);
+		div.appendChild(artist);
+		var md = function(ev) {
+			initial_pos = ev.clientX;
+			on_thing = div;
+			thing_open = false;
+			ev.stopPropagation();
+		}
+
+		div.addEventListener('mousedown', md);
+		el.appendChild(div);
+		var div2 = document.createElement('div');
+		div2.className = 'button-thing';
+		div2.innerText = "Add to Queue";
+		div2.style.backgroundColor = "#FF0000";
+		div2.addEventListener('mousedown', function() {addToQueue(div);}); // It never gets mouseup
+		el.appendChild(div2);
 		clickCallback = function() {
 			playSongById(songObj['id']);
 		}
@@ -392,11 +453,28 @@ document.getElementById('now-playing-repeat-button').addEventListener('click', t
 
 document.getElementById('now-playing-shuffle-button').addEventListener('click', toogleShuffle);
 
+var abcd = false;
+function seekPercent(percent) {
+	var clamped = percent< 0?0 :(percent > 1? 1 : percent);
+	//TODO Soon
+
+}
+document.getElementById('now-playing-progress-control-l').addEventListener('mousedown', function() {abcd = true;});
+document.addEventListener('mousemove', function(ev) {
+	if(abcd) {
+		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.clientY+document.getElementsByTagName('html')[0].scrollTop-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
+	}
+});
+document.addEventListener('mouseup', function() {abcd = false;});
+
+
 // QUEUE VIEW
 document.getElementById('queue-mini-bar-next-button').addEventListener('click', function(e) {
 	nextSong();
 	e.stopPropagation(); // don't let the click event propagate to the mini-bar
 });
+
+
 
 document.getElementById('queue-mini-bar-play-button').addEventListener('click', function(e) {
 	togglePlay();
