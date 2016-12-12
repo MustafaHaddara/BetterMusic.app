@@ -6,6 +6,13 @@ var LIST_VIEW_MODE = 'song'
 var NOW_PLAYING_SONG = 0;
 var SONG_QUEUE = [0,1,1,0,1];
 
+var PLAY_NEXT_SONG_IN_QUEUE = false; 
+
+document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).addEventListener('ended', function() {
+	PLAY_NEXT_SONG_IN_QUEUE = true;
+	nextSong();
+});
+
 document.addEventListener("DOMContentLoaded", function(event) {
 	filterBy('song'); // initial default state
 });
@@ -83,13 +90,12 @@ function playSongById(songId) {
 
 function nextSong() {
 	console.log('Skipping to next song');
-	if (!(document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).paused) && document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime > 0) {
+if ((!(document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).paused) && document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime > 0) || (PLAY_NEXT_SONG_IN_QUEUE)) {
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).pause();
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime = 0;
 		NOW_PLAYING_SONG++;
-		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
-		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).play();
+		PLAY_NEXT_SONG_IN_QUEUE = false;
 	} else {
 		NOW_PLAYING_SONG++;
 	}
@@ -103,8 +109,6 @@ function prevSong() {
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).pause();
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime = 0;
 		NOW_PLAYING_SONG--;
-		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
-		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).play();
 	} else {
 		NOW_PLAYING_SONG--;
