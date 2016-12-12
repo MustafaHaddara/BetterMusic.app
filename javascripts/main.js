@@ -159,7 +159,10 @@ function searchBy(searchTerm) {
 	document.getElementById('nav-header').innerText = "Search for: " + searchTerm ;
 }
 
-function filterBy(mode) {
+// filter our songs according to a mode (ie. attribute)
+// optionally accept a secondFilter which will further restrict
+// our search results
+function filterBy(mode, secondFilter) {
 	// set the global mode (we'll use this for navigation)
 	LIST_VIEW_MODE = mode;
 	document.getElementById('nav-header').innerText = (mode + 's') ;
@@ -176,6 +179,11 @@ function filterBy(mode) {
 		if (result.has(song[key])) {
 			continue;
 		}
+		if (secondFilter && !secondFilter(song)) {
+			// if the second filter is defined 
+			// and this song doesn't pass that filter
+			continue;
+		}
 		result.add(song[key]);
 		var song = buildSongListItem(song, LIST_VIEW_MODE);
 		listView.appendChild(song);
@@ -185,6 +193,9 @@ function filterBy(mode) {
 
 function buildSongListItem(songObj, mode) {
 	var el = document.createElement('li');
+	var clickCallback = function() {
+		console.log('No callback implemented');
+	}
 	if (mode == 'song') {
 		var title = document.createElement('span');
 		title.innerText = songObj['name'];
@@ -197,13 +208,33 @@ function buildSongListItem(songObj, mode) {
 		artist.innerText = songObj['artist'];
 		artist.style.fontSize = '12pt';
 		el.appendChild(artist);
-		el.addEventListener('click', function() {
+		clickCallback = function() {
 			playSongById(songObj['id']);
-		});
-		return el;
+		}
 	} else {
-		el.appendChild(document.createTextNode(songObj[mode]));
+		// create list node
+		var value = songObj[mode];
+		el.appendChild(document.createTextNode(value));
+
+		// create callback
+		var secondFilter = function(obj) { 
+			return obj[mode] == value;
+		}
+		if (mode == 'genre') {
+			clickCallback = function() {
+				filterBy('artist', secondFilter);
+			}
+		} else if (mode == 'artist') {
+			clickCallback = function() {
+				filterBy('album', secondFilter);
+			}
+		} else if (mode == 'album') {
+			clickCallback = function() {
+				filterBy('song', secondFilter);
+			}
+		}
 	}
+	el.addEventListener('click', clickCallback);
 	return el;
 }
 
