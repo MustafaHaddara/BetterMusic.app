@@ -347,6 +347,7 @@ if (typeof document.hidden !== "undefined") {
 document.addEventListener(visibilityChange, handleVisibilityChange, false);
 
 function handleVisibilityChange() {
+	var node = document.getElementById(SONGS[NOW_PLAYING_SONG].id);
 	if (!document[hidden]) {
 		var len = node.seekable.end(0);
 		var percent = node.currentTime/len;
