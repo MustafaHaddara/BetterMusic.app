@@ -72,7 +72,8 @@ function playSongById(songId) {
 	// find index of song
 	for (var i=0; i<SONGS.length; i++) {
 		if (SONGS[i].id == songId) {
-			NOW_PLAYING_SONG = i;
+			SONG_QUEUE = [i];
+			NOW_PLAYING_SONG = 0;
 			break;
 		}
 	}
