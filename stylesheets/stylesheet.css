@@ -48,7 +48,9 @@ html, body {
 
 #nav-list-view > li {
 	width: calc(100% - 2*15pt);
-	height: 43pt;
+	padding-top: 21px;
+    padding-bottom: 21px;
+	/*height: 43pt;*/
 	display: flex;
 	border-bottom: 1px solid #000000;
 	padding: 0 15pt;
