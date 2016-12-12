@@ -10,10 +10,70 @@ var RECENT_SEARCHES = [];
 
 var AUTO_PLAY_NEXT_SONG_IN_QUEUE = false; 
 
-document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).addEventListener('ended', function() {
+document.getElementById(SONGS[NOW_PLAYING_SONG].id).addEventListener('ended', function() {
 	AUTO_PLAY_NEXT_SONG_IN_QUEUE = true;
 	nextSong();
 });
+
+// TODO: optional fixed size
+function Queue() {
+	this._queue = [];
+	this.first = function() {
+		if (this._queue.length > 0) {
+			return this._queue.shift();
+		}
+		return null;
+	}
+	this.last = function() {
+		if (this._queue.length > 0) {
+			return this._queue.pop();
+		}
+		return null;
+	}
+	this.clear = function(){
+		this._queue = [];
+	}
+	this.append = function(elem) {
+		this._queue.push(elem);
+	}
+	this.prepend = function(elem) {
+		this._queue.unshift(elem);
+	}
+	this.move = function() {
+
+	}
+	this.remove = function(idx) {
+		this._queue.splice(idx, 1);
+	}
+	this.queue = function() {
+		return this._queue;
+	}
+};
+
+function Player() {
+	this.play = function() {
+
+	}
+	this.pause = function() {
+
+	}
+	this.currentTime = function() {
+
+	}
+	this.seek = function(time) {
+
+	}
+	this.setSong = function(idx) {
+
+	}
+	this.paused = function() {
+
+	}
+}
+
+var queue = new Queue();
+
+var previous_song_queue = new Queue();
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	filterBy('song'); // initial default state
@@ -63,10 +123,10 @@ function goToSearchView() {
 }
 
 function updateNowPlayingSongInformation() {
-	document.getElementById('now-playing-song-title').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].name;
-	document.getElementById('now-playing-song-details').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].artist + ' - ' + SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].album;
-	document.getElementById('mini-bar-song-title').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].name;
-	document.getElementById('mini-bar-song-details').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].artist + ' - ' + SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].album;
+	document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
+	document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
+	document.getElementById('mini-bar-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
+	document.getElementById('mini-bar-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
 	document.getElementById('now-playing-song-details-container').scrollLeft = 0;
 }
 
@@ -104,8 +164,8 @@ function playSongById(songId) {
 	// find index of song
 	for (var i=0; i<SONGS.length; i++) {
 		if (SONGS[i].id == songId) {
-			SONG_QUEUE = [i];
-			NOW_PLAYING_SONG = 0;
+			queue.clear();
+			NOW_PLAYING_SONG = songId;;
 			break;
 		}
 	}
@@ -118,12 +178,24 @@ function nextSong() {
 	if (!(music_analog.paused) && music_analog.currentTime > 0 || AUTO_PLAY_NEXT_SONG_IN_QUEUE) {
 		music_analog.context.suspend();
 		music_analog.currentTime = 0;
-		NOW_PLAYING_SONG++;
+		var next = queue.first();
+		if(next == null) {
+			//
+		} else {
+			previous_song_queue.append(NOW_PLAYING_SONG);
+			NOW_PLAYING_SONG = next;
+		}
 		AUTO_PLAY_NEXT_SONG_IN_QUEUE = false;
 		last_update = performance.now();
 		music_analog.context.resume();
 	} else {
-		NOW_PLAYING_SONG++;
+		var next = queue.first();
+		if(next == null) {
+			//
+		} else {
+			previous_song_queue.append(NOW_PLAYING_SONG);
+			NOW_PLAYING_SONG = next;
+		}
 	}
 	updateNowPlayingSongInformation();
 }
@@ -131,14 +203,26 @@ function nextSong() {
 function prevSong() {
 	console.log('Back to previous song');
 
-	if (!(document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).paused) && document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime > 0) {
-		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).pause();
-		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime = 0;
-		NOW_PLAYING_SONG--;
+	if (!(document.getElementById(SONGS[NOW_PLAYING_SONG].id).paused) && document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime > 0) {
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
+		var last = previous_song_queue.last();
+		if(last == null) {
+			//
+		} else {
+			queue.prepend(NOW_PLAYING_SONG);
+			NOW_PLAYING_SONG=last;;
+		}
 		last_update = performance.now();
-		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).play();
+		document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
 	} else {
-		NOW_PLAYING_SONG--;
+		var last = previous_song_queue.last();
+		if(last == null) {
+			//
+		} else {
+			queue.prepend(NOW_PLAYING_SONG);
+			NOW_PLAYING_SONG=last;;
+		}
 	}
 	updateNowPlayingSongInformation();
 }
@@ -243,14 +327,16 @@ var mm = function(ev) {
 	}
 }
 	var mu = function(ev) {
-		initial_pos = 0;
 		var pos = (ev.clientX -initial_pos);
 		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
+		console.log(pos);
+		console.log(sz);
 		if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
 			on_thing.style.left = sz + 'px'; // TODO: Smooth out
 			thing_open = true;
 		} else {
 			if(on_thing !== undefined) {
+			initial_pos = 0;
 			on_thing.style.left = '0px'; // TODO: Smooth out
 			on_thing = undefined;
 		}
@@ -259,7 +345,7 @@ var mm = function(ev) {
 	}
 
 function addToQueue(div) {
-	console.log(div);
+	queue.append(parseInt(div.dataset.id, 10));
 }
 
 document.addEventListener('mousemove', mm);
@@ -295,6 +381,11 @@ function buildSongListItem(songObj, mode) {
 		artist.style.fontSize = '12pt';
 		div.appendChild(artist);
 		var md = function(ev) {
+			if (on_thing !== undefined && thing_open) {
+				thing_open = false;
+				on_thing.style.left = '0px';
+				open_thing = undefined;
+			}
 			initial_pos = ev.clientX;
 			on_thing = div;
 			thing_open = false;
@@ -306,11 +397,13 @@ function buildSongListItem(songObj, mode) {
 		var div2 = document.createElement('div');
 		div2.className = 'button-thing';
 		div2.innerText = "Add to Queue";
+		var map_thing = {'song-StereoLove': 0, "song-WereInHeaven": 1, "song-Voltaic": 2};
+		div2.dataset.id = map_thing[songObj['id']];
 		div2.style.backgroundColor = "#FF0000";
-		div2.addEventListener('mousedown', function() {addToQueue(div);}); // It never gets mouseup
+		div2.addEventListener('mousedown', function() {addToQueue(div2);}); // It never gets mouseup
 		el.appendChild(div2);
 		clickCallback = function() {
-			playSongById(songObj['id']);
+			playSongById(map_thing[songObj['id']]);
 		}
 	} else {
 		// create list node
@@ -356,8 +449,8 @@ function back() {
 function buildQueue() {
 	var listView = document.getElementById('queue-list-view');
 	listView.innerHTML = "";  // clear the list
-	for(var i = 0; i < SONG_QUEUE.length; i++) {
-		var idx = SONG_QUEUE[i];
+	for(var i = 0; i < queue.queue().length; i++) {
+		var idx = queue.queue()[i];
 		var song = buildSongListItem(SONGS[idx], 'song');
 		listView.appendChild(song);
 	}
