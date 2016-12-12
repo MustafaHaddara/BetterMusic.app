@@ -5,6 +5,7 @@ var SHUFFLE = false;
 var LIST_VIEW_MODE = 'song'
 var NOW_PLAYING_SONG = 0;
 
+
 document.addEventListener("DOMContentLoaded", function(event) {
 	filterBy('song'); // initial default state
 });
@@ -62,6 +63,8 @@ function nextSong() {
 		document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
 		document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
 		NOW_PLAYING_SONG = 1;
+		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
+		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
 		document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
 	} else {
 		NOW_PLAYING_SONG = 1;
@@ -74,6 +77,8 @@ function prevSong() {
 		document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
 		document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
 		NOW_PLAYING_SONG = 0;
+		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
+		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
 		document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
 	} else {
 		NOW_PLAYING_SONG = 0;
@@ -256,3 +261,24 @@ document.getElementById('queue-mini-bar-play-button').addEventListener('click', 
 	togglePlay();
 	e.stopPropagation();
 }, false);
+
+var not_run = true;
+
+function frameUpdate() {
+	var node = document.getElementById(SONGS[NOW_PLAYING_SONG].id);
+	if(!node.paused || not_run) {
+		var len = node.seekable.end(0);
+		var percent = node.currentTime/len;
+		document.getElementById('now-playing-art-bw-container').style.height = ((1-percent)*375)+'pt';
+		document.getElementById('now-playing-progress-control').style.top = (((1-percent)*375)+10) + 'pt';
+		var thing = (Math.round(node.currentTime - Math.floor(node.currentTime/60)*60) + '');
+		thing = Math.floor(node.currentTime/60) + ':' + (thing.length < 2? '0':'') + thing;
+		document.getElementById('now-playing-progress-control-l').innerText = thing;
+		document.getElementById('now-playing-progress-control-r').innerText = thing;
+		not_run = false;
+		node.volume = document.getElementById('now-playing-volume-slider').value/100;
+	}
+	window.requestAnimationFrame(frameUpdate);
+}
+
+window.requestAnimationFrame(frameUpdate);

@@ -209,18 +209,24 @@ html, body {
 #now-playing-art-bw {
 	filter: grayscale(100%);
 	width: 375pt;
+}
+
+#now-playing-art-bw-container {
 	position: absolute;
 	top: 20pt; /* same as status bar */
 	left: 0pt;
-	clip: rect(0, 375pt, 275pt, 0); /*top, right, bottom, left*/
+	/*clip: rect(0, 375pt, 275pt, 0);*/ /*top, right, bottom, left*/
 	/*clipping rectange has same width (ie right side) as image width*/
 	/*clipping rectange bottom is equal to the height (which decreases as time goes on)*/
 	z-index: 2;
+	height: 375pt;
+	overflow: hidden;
+	border-bottom: 2pt solid #000000;
 }
 
 #now-playing-progress-control {
 	position: absolute;
-	top: calc(10pt + 275pt); /* 14pt plus height of the b/w album art */
+	/*top: calc(10pt + 275pt);*/ /* 14pt plus height of the b/w album art */
 	width: 375pt;
 	z-index: 3;
 }
