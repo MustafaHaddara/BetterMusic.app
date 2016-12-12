@@ -49,7 +49,7 @@ html, body {
 #nav-list-view > li {
 	width: calc(100% - 2*15pt);
 	margin-top: 21px;
-    margin-bottom: 21px;
+	margin-bottom: 21px;
 	/*height: 43pt;*/
 	display: flex;
 	border-bottom: 1px solid #000000;
@@ -302,7 +302,7 @@ html, body {
 	display: flex;
 	justify-content: center;
 	z-index: 3;
-	top: calc(375pt/2 - 08pt);
+	top: calc(375pt/2 - 60pt);
 	width: 375pt;
 	transform: scale(0.5);
 }
@@ -332,6 +332,10 @@ html, body {
 	width: 100%;
 	display: inline-block;
 	text-align: justify;
+}
+
+#now-playing-volume-bar > img {
+	transform: translateY(6pt); /* dirty hack */
 }
 
 #now-playing-min-volume-icon {
