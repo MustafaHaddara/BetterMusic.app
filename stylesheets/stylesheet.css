@@ -330,10 +330,27 @@ html, body {
 	font-size: 22pt;
 }
 
+#now-playing-volume-bar {
+	width: 100%;
+	display: inline-block;
+	text-align: justify;
+}
+
+#now-playing-min-volume-icon {
+	padding-left: 5%;
+	padding-right: 1%;
+	height: auto;
+	width: 5.5%;
+}
+
 #now-playing-volume-slider {
-	width: 90%;
-	height: 30pt;
-	margin-left: 5%;
+	width: 70%;
+}
+
+#now-playing-max-volume-icon {
+	padding-left: 1%;
+	height: auto;
+	width: 10%;
 }
 
 #now-playing-playback-options {
