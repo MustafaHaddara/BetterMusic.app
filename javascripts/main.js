@@ -294,13 +294,42 @@ document.getElementById('queue-mini-bar-play-button').addEventListener('click', 
 
 var not_run = true;
 
+var hidden, visibilityChange; 
+if (typeof document.hidden !== "undefined") {
+	hidden = "hidden";
+	visibilityChange = "visibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+	hidden = "msHidden";
+	visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+	hidden = "webkitHidden";
+	visibilityChange = "webkitvisibilitychange";
+}
+
+document.addEventListener(visibilityChange, handleVisibilityChange, false);
+
+function handleVisibilityChange() {
+	if (!document[hidden]) {
+		var len = node.seekable.end(0);
+		var percent = node.currentTime/len;
+		document.getElementById('now-playing-art-bw-container').style.height = Math.floor((1-percent)*375)+'pt';
+		document.getElementById('now-playing-progress-control').style.top = Math.floor(((1-percent)*375)+10) + 'pt';
+		var thing = (Math.round(node.currentTime - Math.floor(node.currentTime/60)*60) + '');
+		thing = Math.floor(node.currentTime/60) + ':' + (thing.length < 2? '0':'') + thing;
+		document.getElementById('now-playing-progress-control-l').innerText = thing;
+		document.getElementById('now-playing-progress-control-r').innerText = thing;
+		not_run = false;
+		node.volume = document.getElementById('now-playing-volume-slider').value/100;
+	}
+}
+
 function frameUpdate() {
 	var node = document.getElementById(SONGS[NOW_PLAYING_SONG].id);
 	if(!node.paused || not_run) {
 		var len = node.seekable.end(0);
 		var percent = node.currentTime/len;
-		document.getElementById('now-playing-art-bw-container').style.height = ((1-percent)*375)+'pt';
-		document.getElementById('now-playing-progress-control').style.top = (((1-percent)*375)+10) + 'pt';
+		document.getElementById('now-playing-art-bw-container').style.height = Math.floor((1-percent)*375)+'pt';
+		document.getElementById('now-playing-progress-control').style.top = Math.floor(((1-percent)*375)+10) + 'pt';
 		var thing = (Math.round(node.currentTime - Math.floor(node.currentTime/60)*60) + '');
 		thing = Math.floor(node.currentTime/60) + ':' + (thing.length < 2? '0':'') + thing;
 		document.getElementById('now-playing-progress-control-l').innerText = thing;
