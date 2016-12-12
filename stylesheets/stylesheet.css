@@ -190,6 +190,33 @@ html, body {
 	border-left: 1px solid #000000;
 }
 
+#nav-tab-artists {
+	background-image: url('../images/artists.png');
+	background-size: 100% auto;
+	
+}
+#nav-tab-songs {
+	background-image: url('../images/songs.png');
+	background-size: 100% auto;
+	
+}
+#nav-tab-genre {
+	background-image: url('../images/genres.png');
+	background-size: 100% auto;
+	
+}
+#nav-tab-search {
+	background-image: url('../images/search.png');
+	background-size: 100% auto;
+	
+}
+
+#nav-tab-albums {
+	background-image: url('../images/albums.png');
+	background-size: 100% auto;
+	
+}
+
 #now-playing-view {
 	/*display: none;*/
 	width: 375pt;
