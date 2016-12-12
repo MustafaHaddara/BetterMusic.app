@@ -270,6 +270,16 @@ function back() {
 	}
 }
 
+function buildQueue() {
+	var listView = document.getElementById('queue-list-view');
+	listView.innerHTML = ""  // clear the list
+	for(var i = 0; i < SONG_QUEUE.length; i++) {
+		var idx = SONG_QUEUE[i];
+		var song = buildSongListItem(SONGS[idx], LIST_VIEW_MODE);
+		listView.appendChild(song);
+	}
+}
+
 // EVENT LISTENERS
 // TRANSITIONS
 document.getElementById('now-playing-close-button').addEventListener('click', function() {
@@ -281,6 +291,7 @@ document.getElementById('mini-bar').addEventListener('click', function() {
 });
 
 document.getElementById('now-playing-queue-button').addEventListener('click', function() {
+	buildQueue();
 	switchView('queue-view');
 });
 
