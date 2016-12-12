@@ -292,10 +292,18 @@ html, body {
 
 #now-playing-song-title {
 	font-size: 28pt;
+	overflow: hidden;
+	height: 1.15em;
 }
 
 #now-playing-song-details {
+	white-space: nowrap;
+}
+
+#now-playing-song-details-container {
 	font-size: 22pt;
+	overflow: hidden;
+	height: 1.15em;
 }
 
 #now-playing-volume-slider {
