@@ -334,7 +334,7 @@ var not_run = true;
 
 function frameUpdate() {
 	var node = document.getElementById(SONGS[NOW_PLAYING_SONG].id);
-	if(!node.paused || not_run) {
+	if(!node.paused) {
 		var len = node.seekable.end(0);
 		var percent = node.currentTime/len;
 		document.getElementById('now-playing-art-bw-container').style.height = ((1-percent)*375)+'pt';
