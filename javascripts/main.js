@@ -8,10 +8,10 @@ var SONG_QUEUE = [0,1,1,0,1];
 var LIBRARY_STATES = [];
 var RECENT_SEARCHES = [];
 
-var PLAY_NEXT_SONG_IN_QUEUE = false; 
+var AUTO_PLAY_NEXT_SONG_IN_QUEUE = false; 
 
 document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).addEventListener('ended', function() {
-	PLAY_NEXT_SONG_IN_QUEUE = true;
+	AUTO_PLAY_NEXT_SONG_IN_QUEUE = true;
 	nextSong();
 });
 
@@ -67,6 +67,7 @@ function updateNowPlayingSongInformation() {
 	document.getElementById('now-playing-song-details').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].artist + ' - ' + SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].album;
 	document.getElementById('mini-bar-song-title').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].name;
 	document.getElementById('mini-bar-song-details').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].artist + ' - ' + SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].album;
+	document.getElementById('now-playing-song-details-container').scrollLeft = 0;
 }
 
 function play() {
@@ -114,14 +115,11 @@ function playSongById(songId) {
 }
 
 function nextSong() {
-	if (!(music_analog.paused) && music_analog.currentTime > 0 || PLAY_NEXT_SONG_IN_QUEUE) {
+	if (!(music_analog.paused) && music_analog.currentTime > 0 || AUTO_PLAY_NEXT_SONG_IN_QUEUE) {
 		music_analog.context.suspend();
 		music_analog.currentTime = 0;
 		NOW_PLAYING_SONG++;
-		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
-		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
-		document.getElementById('now-playing-song-details-container').scrollLeft = 0;
-		PLAY_NEXT_SONG_IN_QUEUE = false;
+		AUTO_PLAY_NEXT_SONG_IN_QUEUE = false;
 		last_update = performance.now();
 		music_analog.context.resume();
 	} else {
@@ -137,9 +135,6 @@ function prevSong() {
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).pause();
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).currentTime = 0;
 		NOW_PLAYING_SONG--;
-		document.getElementById('now-playing-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
-		document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' – ' + SONGS[NOW_PLAYING_SONG].album;
-		document.getElementById('now-playing-song-details-container').scrollLeft = 0;
 		last_update = performance.now();
 		document.getElementById(SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].id).play();
 	} else {
