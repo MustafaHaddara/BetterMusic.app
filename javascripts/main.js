@@ -165,7 +165,7 @@ function searchBy(searchTerm) {
 function filterBy(mode, secondFilter) {
 	// set the global mode (we'll use this for navigation)
 	LIST_VIEW_MODE = mode;
-	document.getElementById('nav-header').innerText = (mode + 's') ;
+	setHeader(mode + 's') ;
 	var key = (mode=='song'? 'name': mode);
 
 	// populate this listview
@@ -223,19 +223,26 @@ function buildSongListItem(songObj, mode) {
 		if (mode == 'genre') {
 			clickCallback = function() {
 				filterBy('artist', secondFilter);
+				setHeader(value);
 			}
 		} else if (mode == 'artist') {
 			clickCallback = function() {
 				filterBy('album', secondFilter);
+				setHeader(value);
 			}
 		} else if (mode == 'album') {
 			clickCallback = function() {
 				filterBy('song', secondFilter);
+				setHeader(value);
 			}
 		}
 	}
 	el.addEventListener('click', clickCallback);
 	return el;
+}
+
+function setHeader(newText) {
+	document.getElementById('nav-header').innerText = newText;
 }
 
 // EVENT LISTENERS
