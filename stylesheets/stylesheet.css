@@ -3,6 +3,18 @@ html, body {
 	padding: 0;
 }
 
+@media (min-width: 375pt) {
+	#phone-screen-container {
+		border-right: 10pt solid #00FF00;
+	}
+}
+
+@media (min-height: 667pt) {
+	#phone-screen-container {
+		border-bottom: 10pt solid #00FF00;
+	}
+}
+
 #phone-screen-container {
 	width: 375pt;
 	height: 667pt;
@@ -238,7 +250,7 @@ html, body {
 #now-playing-view {
 	/*display: none;*/
 	width: 375pt;
-	height: 667pt;
+	height: 647pt;
 }
 
 #now-playing-album-art {
