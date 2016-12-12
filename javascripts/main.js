@@ -6,6 +6,7 @@ var LIST_VIEW_MODE = 'song'
 var NOW_PLAYING_SONG = 0;
 var SONG_QUEUE = [0,1,1,0,1];
 var LIBRARY_STATES = [];
+var RECENT_SEARCHES = [];
 
 var PLAY_NEXT_SONG_IN_QUEUE = false; 
 
@@ -55,6 +56,8 @@ function switchSubView(viewName) {
 }
 
 function goToSearchView() {
+	document.getElementById('search-input').value = "";
+	buildSearchHistory();
 	switchSubView('nav-search-view');
 	LIBRARY_STATES.push(function() { switchSubView('nav-search-view'); });
 }
@@ -195,13 +198,14 @@ function searchBy(searchTerm) {
 	switchSubView('nav-list-view'); // go to list view
 	setHeader("Search for: " + searchTerm);
 	LIBRARY_STATES.push(function() { searchBy(searchTerm); });
+	RECENT_SEARCHES.push(searchTerm);
 }
 
 // filter our songs according to a mode (ie. attribute)
 // optionally accept a secondFilter which will further restrict
 // our search results
 function filterBy(mode, secondFilter, omitFromHistory) {
-	// set the global mode (we'll use this for navigation)
+	// set the global mode (we'll use this for the header)
 	LIST_VIEW_MODE = mode;
 	setHeader(mode + 's') ;
 	var key = (mode=='song'? 'name': mode);
@@ -295,11 +299,23 @@ function back() {
 
 function buildQueue() {
 	var listView = document.getElementById('queue-list-view');
-	listView.innerHTML = ""  // clear the list
+	listView.innerHTML = "";  // clear the list
 	for(var i = 0; i < SONG_QUEUE.length; i++) {
 		var idx = SONG_QUEUE[i];
-		var song = buildSongListItem(SONGS[idx], LIST_VIEW_MODE);
+		var song = buildSongListItem(SONGS[idx], 'song');
 		listView.appendChild(song);
+	}
+}
+
+function buildSearchHistory() {
+	var list = document.getElementById('search-list');
+	list.innerHTML = "";
+	for (var i=RECENT_SEARCHES.length-1; i>=0; i--) {
+		var searchTerm = RECENT_SEARCHES[i];
+		var searchItem = document.createElement('li');
+		searchItem.addEventListener('click', function() { searchBy(searchTerm); });
+		searchItem.appendChild(document.createTextNode(searchTerm));
+		list.appendChild(searchItem);
 	}
 }
 
