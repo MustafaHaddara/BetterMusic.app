@@ -160,7 +160,7 @@ function toggleRepeat() {
 	console.log('repeat is ' + (REPEAT? 'on':'off'));
 }
 
-function toogleShuffle() {
+function toggleShuffle() {
 	// cosmetics
 	if (SHUFFLE) {
 		document.getElementById('now-playing-shuffle-button').children[0].src = 'images/icons-png/icon-_0012_ShuffleOff.png'
@@ -390,7 +390,7 @@ document.getElementById('now-playing-next-button').addEventListener('click', nex
 
 document.getElementById('now-playing-repeat-button').addEventListener('click', toggleRepeat);
 
-document.getElementById('now-playing-shuffle-button').addEventListener('click', toogleShuffle);
+document.getElementById('now-playing-shuffle-button').addEventListener('click', toggleShuffle);
 
 // QUEUE VIEW
 document.getElementById('queue-mini-bar-next-button').addEventListener('click', function(e) {
