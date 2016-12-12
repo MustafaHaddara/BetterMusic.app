@@ -253,7 +253,7 @@ html, body {
 	z-index: 2;
 	height: 375pt;
 	overflow: hidden;
-	border-bottom: 2pt solid #000000;
+	border-bottom: 1pt solid #000000;
 }
 
 #now-playing-progress-control {
@@ -304,7 +304,7 @@ html, body {
 	display: flex;
 	justify-content: center;
 	z-index: 3;
-	top: calc(375pt/2 - 20pt);
+	top: calc(375pt/2 - 08pt);
 	width: 375pt;
 	transform: scale(0.5);
 }
