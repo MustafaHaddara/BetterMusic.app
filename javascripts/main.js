@@ -36,6 +36,11 @@ function switchSubView(viewName) {
 	setHeader(viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
 }
 
+function goToSearchView() {
+	switchSubView('nav-search-view');
+	LIBRARY_STATES.push(function() { switchSubView('nav-search-view'); });
+}
+
 function updateNowPlayingSongInformation() {
 	document.getElementById('now-playing-song-title').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].name;
 	document.getElementById('now-playing-song-details').innerText = SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].artist + ' - ' + SONGS[SONG_QUEUE[NOW_PLAYING_SONG]].album;
@@ -166,6 +171,7 @@ function searchBy(searchTerm) {
 	}
 	switchSubView('nav-list-view'); // go to list view
 	setHeader("Search for: " + searchTerm);
+	LIBRARY_STATES.push(function() { searchBy(searchTerm); });
 }
 
 // filter our songs according to a mode (ie. attribute)
@@ -199,7 +205,7 @@ function filterBy(mode, secondFilter, omitFromHistory) {
 	}
 	switchSubView('nav-list-view'); // go to library
 	if (!omitFromHistory) {
-		LIBRARY_STATES.push({'mode':mode, 'secondFilter':secondFilter}); // for back button
+		LIBRARY_STATES.push(function() { filterBy(mode, secondFilter, true); }); // for back button
 	}
 }
 
@@ -260,8 +266,7 @@ function setHeader(newText) {
 function back() {
 	if (LIBRARY_STATES.length > 1) {
 		LIBRARY_STATES.pop(); // remove last state
-		new_state = LIBRARY_STATES[LIBRARY_STATES.length - 1];
-		filterBy(new_state['mode'], new_state['secondFilter'], true);
+		LIBRARY_STATES[LIBRARY_STATES.length - 1]();
 	}
 }
 
@@ -302,7 +307,7 @@ document.getElementById('nav-tab-genre').addEventListener('click', function() {
 });
 
 document.getElementById('nav-tab-search').addEventListener('click', function() {
-	switchSubView('nav-search-view'); // go to search view
+	goToSearchView();
 });
 
 document.getElementById('search-view-lib-button').addEventListener('click', function() {
