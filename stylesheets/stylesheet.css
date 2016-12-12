@@ -226,7 +226,7 @@ html, body {
 
 #now-playing-progress-control {
 	position: absolute;
-	/*top: calc(10pt + 275pt);*/ /* 14pt plus height of the b/w album art */
+	top: calc(10pt + 375pt); /* 10pt plus height of the b/w album art */
 	width: 375pt;
 	z-index: 3;
 }
