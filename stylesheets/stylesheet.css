@@ -52,7 +52,6 @@ html, body {
 	display: flex;
 	border-bottom: 1px solid #000000;
 	padding: 0 15pt;
-	text-align: center;
 }
 
 #nav-search-view {
@@ -188,7 +187,6 @@ html, body {
 	height: 49pt;
 	display: inline-block;
 	border: 0;
-
 }
 
 #tab-bar > li + li {
@@ -198,28 +196,26 @@ html, body {
 #nav-tab-artists {
 	background-image: url('../images/artists.png');
 	background-size: 100% auto;
-	
 }
+
 #nav-tab-songs {
 	background-image: url('../images/songs.png');
 	background-size: 100% auto;
-	
 }
+
 #nav-tab-genre {
 	background-image: url('../images/genres.png');
 	background-size: 100% auto;
-	
 }
+
 #nav-tab-search {
 	background-image: url('../images/search.png');
 	background-size: 100% auto;
-	
 }
 
 #nav-tab-albums {
 	background-image: url('../images/albums.png');
 	background-size: 100% auto;
-	
 }
 
 #now-playing-view {
@@ -408,6 +404,25 @@ html, body {
 #queue-mini-bar-next-button {
 	width: 44pt;
 	float: right;
+}
+
+#queue-list-view {
+	height: calc(667pt - 20pt - 49pt - 48pt - 40pt - 3pt);
+	margin: 0;
+	padding: 0;
+	display: block;
+	list-style: none;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	/*display: none;*/
+}
+
+#queue-list-view > li {
+	width: calc(100% - 2*15pt);
+	height: 43pt;
+	display: flex;
+	border-bottom: 1px solid #000000;
+	padding: 0 15pt;
 }
 
 #audioFiles {
