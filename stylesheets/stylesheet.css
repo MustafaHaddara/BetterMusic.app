@@ -68,6 +68,16 @@ html, body {
 	transform-style: preserve-3d;
 }
 
+#nav-list-view-elements {
+	height:10%;
+}
+
+#nav-list-view-elements-albumArt {
+/*	height: auto;
+	padding-right: 100%;*/
+	width: 15%;
+}
+
 #mini-bar-album-art {
 	float: left;
 }

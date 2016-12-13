@@ -468,6 +468,7 @@ document.addEventListener('touchstart', function() {
 
 function buildSongListItem(songObj, mode, counter) {
 	var el = document.createElement('li');
+	el.id = 'nav-list-view-elements'
 	var clickCallback = function() {
 		console.log('No callback implemented');
 	}
@@ -510,7 +511,8 @@ function buildSongListItem(songObj, mode, counter) {
 			ev.stopPropagation();
 		}
 		var img = document.createElement('img');
-		img.src = 'images/album-art.png';
+		img.src = songObj['albumArt'];
+		img.id = 'nav-list-view-elements-albumArt';
 		el.appendChild(img);
 		div.addEventListener('mousedown', md);
 		div.addEventListener('touchstart', ts);  // TODO: Totally wrong, additional presses will mess stuff up.
