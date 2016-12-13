@@ -327,8 +327,36 @@ var mm = function(ev) {
 		on_thing.style.left = (pos > sz?sz:(pos < 0?0:pos)) + 'px';
 	}
 }
+
+var tm = function(ev) {
+	if(on_thing !== undefined && !thing_open) {
+		var pos = (ev.touches[0].clientX -initial_pos) ;
+		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
+		on_thing.style.left = (pos > sz?sz:(pos < 0?0:pos)) + 'px';
+	}
+}
+
+
 	var mu = function(ev) {
 		var pos = (ev.clientX -initial_pos);
+		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
+		console.log(pos);
+		console.log(sz);
+		if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
+			on_thing.style.left = sz + 'px'; // TODO: Smooth out
+			thing_open = true;
+		} else {
+			if(on_thing !== undefined) {
+			initial_pos = 0;
+			on_thing.style.left = '0px'; // TODO: Smooth out
+			on_thing = undefined;
+		}
+		}
+	nop_mu = false;
+	}
+
+	var te = function(ev) {
+		var pos = (ev.touches[0].clientX -initial_pos);
 		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
 		console.log(pos);
 		console.log(sz);
@@ -350,9 +378,20 @@ function addToQueue(div) {
 }
 
 document.addEventListener('mousemove', mm);
+document.addEventListener('touchmove', tm);
 document.addEventListener('mouseup', mu);
+document.addEventListener('touchend', te);
 
 document.addEventListener('mousedown', function() {
+	if(on_thing !== undefined) {
+		thing_open = false;
+		on_thing.style.left = '0px';
+		open_thing = undefined;
+		nop_mu = true;
+	}
+});
+
+document.addEventListener('touchstart', function() {
 	if(on_thing !== undefined) {
 		thing_open = false;
 		on_thing.style.left = '0px';
@@ -393,7 +432,20 @@ function buildSongListItem(songObj, mode) {
 			ev.stopPropagation();
 		}
 
+		var ts = function(ev) {
+			if (on_thing !== undefined && thing_open) {
+				thing_open = false;
+				on_thing.style.left = '0px';
+				open_thing = undefined;
+			}
+			initial_pos = ev.touches[0].clientX;
+			on_thing = div;
+			thing_open = false;
+			ev.stopPropagation();
+		}
+
 		div.addEventListener('mousedown', md);
+		div.addEventListener('touchstart', ts);  // TODO: Totally wrong, additional presses will mess stuff up.
 		el.appendChild(div);
 		var div2 = document.createElement('div');
 		div2.className = 'button-thing';
