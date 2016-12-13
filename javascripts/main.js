@@ -127,6 +127,9 @@ function updateNowPlayingSongInformation() {
 	document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
 	document.getElementById('mini-bar-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
 	document.getElementById('mini-bar-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
+	document.getElementById('now-playing-art-color').src =  SONGS[NOW_PLAYING_SONG].albumArt;
+	document.getElementById('now-playing-art-bw').src =  SONGS[NOW_PLAYING_SONG].albumArt;
+	document.getElementById('mini-bar-album-art-img').src =  SONGS[NOW_PLAYING_SONG].albumArt;
 	document.getElementById('now-playing-song-details-container').scrollLeft = 0;
 }
 
