@@ -41,8 +41,8 @@ function Queue() {
 	this.prepend = function(elem) {
 		this._queue.unshift(elem);
 	}
-	this.move = function() {
-
+	this.move = function(old, _new) {
+		this._queue.splice(_new, 0, this._queue.splice(old, 1)[0]);
 	}
 	this.remove = function(selectionIndex) {
 		this._queue = this._queue.filter(function(element, queueIndex) { return selectionIndex !== queueIndex; });
@@ -223,6 +223,7 @@ function nextSong() {
 			NOW_PLAYING_SONG = next;
 		}
 	}
+	buildQueue();
 	updateNowPlayingSongInformation();
 }
 
@@ -250,6 +251,7 @@ function prevSong() {
 			NOW_PLAYING_SONG=last;
 		}
 	}
+	buildQueue();
 	updateNowPlayingSongInformation();
 }
 
@@ -475,11 +477,20 @@ function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 		artist.innerText = songObj['artist'];
 		artist.style.fontSize = '12pt';
 		div.appendChild(artist);
+		if(queue_mode) {
+			var handle = document.createElement('img');
+			handle.src = "images/unknown.png";
+			handle.style.width=20+'pt';
+			handle.style.height=20+'pt';
+			handle.className = "drag-handle";
+			handle.addEventListener('mousedown', function(ev) {ev.stopPropagation();});
+			div.appendChild(handle);
+		}
 		var md = function(ev) {
 			if (on_thing !== undefined && thing_open) {
 				thing_open = false;
-				on_thing.style.left = '0px';
-				open_thing = undefined;
+				on_thing.style.right = '0px';
+				on_thing = undefined;
 			}
 			initial_pos = ev.clientX;
 			on_thing = div;
@@ -490,8 +501,8 @@ function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 		var ts = function(ev) {
 			if (on_thing !== undefined && thing_open) {
 				thing_open = false;
-				on_thing.style.left = '0px';
-				open_thing = undefined;
+				on_thing.style.right = '0px';
+				on_thing = undefined;
 			}
 			initial_pos = ev.touches[0].clientX;
 			on_thing = div;
@@ -588,12 +599,29 @@ function back() {
 
 function buildQueue() {
 	var listView = document.getElementById('queue-list-view');
+	 $('.sortable').sortable('destroy');
 	listView.innerHTML = "";  // clear the list
 	for(var i = 0; i < queue.queue().length; i++) {
 		var idx = queue.queue()[i];
 		var song = buildSongListItem(SONGS[idx], 'song', i, true);
 		listView.appendChild(song);
 	}
+	 $('.sortable').sortable({handle: '.drag-handle'}).bind('sortupdate', function(e,ui) {
+	 	if(on_thing !== undefined) {
+		 	initial_pos = 0;
+			on_thing.style.right = '0px'; // TODO: Smooth out
+			on_thing = undefined;
+		}
+		console.log(ui.item[0].children[2].dataset.counter);
+		var a = ui.item[0].children[2].dataset.counter;
+		var b = ui.item.index();
+		console.log(ui.item.index());
+		console.log(ui.item[0]);
+		console.log(ui);
+		$('.sortable').unbind('sortupdate');  // Destory never unbinds the old sortupdate....
+		queue.move(a,b);
+		buildQueue();
+	});
 }
 
 function buildSearchHistory() {
