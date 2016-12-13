@@ -44,8 +44,8 @@ function Queue() {
 	this.move = function() {
 
 	}
-	this.remove = function(idx) {
-		this._queue.splice(idx, 1);
+	this.remove = function(selectionIndex) {
+		this._queue = this._queue.filter(function(element, queueIndex) { return selectionIndex !== queueIndex; });
 	}
 	this.queue = function() {
 		return this._queue;
@@ -306,7 +306,7 @@ function searchBy(searchTerm) {
 			song['album'].toLowerCase().startsWith(st) || 
 			song['artist'].toLowerCase().startsWith(st)) {
 			result.add(song['name']);
-			var song = buildSongListItem(song, 'song');
+			var song = buildSongListItem(song, 'song', i);
 			listView.appendChild(song);
 		}
 	}
@@ -342,7 +342,7 @@ function filterBy(mode, secondFilter, omitFromHistory) {
 			continue;
 		}
 		result.add(song[key]);
-		var song = buildSongListItem(song, LIST_VIEW_MODE);
+		var song = buildSongListItem(song, LIST_VIEW_MODE, i);
 		listView.appendChild(song);
 	}
 	switchSubView('nav-list-view'); // go to library
@@ -422,6 +422,10 @@ function addToQueue(div) {
 	queue.append(parseInt(div.dataset.id, 10));
 }
 
+function removefromQueue(div) {
+	queue.remove(parseInt(div.dataset.counter, 10));
+}
+
 document.addEventListener('mousemove', mm);
 document.addEventListener('touchmove', tm);
 document.addEventListener('mouseup', mu);
@@ -445,7 +449,7 @@ document.addEventListener('touchstart', function() {
 	}
 });
 
-function buildSongListItem(songObj, mode) {
+function buildSongListItem(songObj, mode, counter) {
 	var el = document.createElement('li');
 	var clickCallback = function() {
 		console.log('No callback implemented');
@@ -497,11 +501,13 @@ function buildSongListItem(songObj, mode) {
 		div2.innerText = "Add to Queue";
 		var map_thing = {'song-StereoLove': 0, "song-WereInHeaven": 1, "song-Voltaic": 2};
 		div2.dataset.id = map_thing[songObj['id']];
+		div2.dataset.counter = counter;
 		div2.style.backgroundColor = "#FF0000";
 		div2.addEventListener('mousedown', function() {addToQueue(div2);}); // It never gets mouseup
 		el.appendChild(div2);
 		clickCallback = function() {
-			playSongById(map_thing[songObj['id']]);
+			removefromQueue(div2);
+			//playSongById(map_thing[songObj['id']]);
 		}
 	} else {
 		// create list node
@@ -550,7 +556,7 @@ function buildQueue() {
 	listView.innerHTML = "";  // clear the list
 	for(var i = 0; i < queue.queue().length; i++) {
 		var idx = queue.queue()[i];
-		var song = buildSongListItem(SONGS[idx], 'song');
+		var song = buildSongListItem(SONGS[idx], 'song', i);
 		listView.appendChild(song);
 	}
 }
