@@ -136,11 +136,16 @@ function switchSubView(viewName) {
 	setHeader(viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
 }
 
+function switchTab(tabName) {
+	LIBRARY_STATES = [];
+	filterBy(tabName);
+}
+
 function goToSearchView() {
 	document.getElementById('search-input').value = "";
 	buildSearchHistory();
 	switchSubView('nav-search-view');
-	LIBRARY_STATES.push(function() { switchSubView('nav-search-view'); });
+	LIBRARY_STATES = [goToSearchView];
 	document.getElementById('search-input').focus();
 }
 
@@ -282,8 +287,6 @@ function toggleShuffle() {
 	}
 }
 
-
-
 // TODO add a back button from search results
 function searchBy(searchTerm) {
 	// populate this listview
@@ -307,10 +310,11 @@ function searchBy(searchTerm) {
 			listView.appendChild(song);
 		}
 	}
-	switchSubView('nav-list-view'); // go to list view
-	setHeader("Search for: " + searchTerm);
 	LIBRARY_STATES.push(function() { searchBy(searchTerm); });
 	RECENT_SEARCHES.push(searchTerm);
+
+	switchSubView('nav-list-view'); // go to list view
+	setHeader("Search for: " + searchTerm);
 }
 
 // filter our songs according to a mode (ie. attribute)
@@ -319,7 +323,6 @@ function searchBy(searchTerm) {
 function filterBy(mode, secondFilter, omitFromHistory) {
 	// set the global mode (we'll use this for the header)
 	LIST_VIEW_MODE = mode;
-	setHeader(mode + 's') ;
 	var key = (mode=='song'? 'name': mode);
 
 	// populate this listview
@@ -346,6 +349,17 @@ function filterBy(mode, secondFilter, omitFromHistory) {
 	if (!omitFromHistory) {
 		LIBRARY_STATES.push(function() { filterBy(mode, secondFilter, true); }); // for back button
 	}
+
+	setHeader(mode + 's');
+}
+
+function updateBackButton() {
+	if (LIBRARY_STATES.length <= 1) {
+		// if we have no where to go back to, don't show the back button
+		document.getElementById('nav-header-back-button').style.display = 'none';
+	} else {
+		document.getElementById('nav-header-back-button').style.display = 'inline';
+	}
 }
 
 var on_thing = undefined;
@@ -367,7 +381,6 @@ var tm = function(ev) {
 		on_thing.style.left = (pos > sz?sz:(pos < 0?0:pos)) + 'px';
 	}
 }
-
 
 var mu = function(ev) {
 	var pos = (ev.clientX -initial_pos);
@@ -522,6 +535,7 @@ function buildSongListItem(songObj, mode) {
 
 function setHeader(newText) {
 	document.getElementById('nav-header-text').innerText = newText;
+	updateBackButton();
 }
 
 function back() {
@@ -575,19 +589,19 @@ document.getElementById('queue-close-button').addEventListener('click', function
 document.getElementById('nav-header-back-button').addEventListener('click', back);
 
 document.getElementById('nav-tab-artists').addEventListener('click', function() {
-	filterBy('artist');
+	switchTab('artist');
 });
 
 document.getElementById('nav-tab-songs').addEventListener('click', function() {
-	filterBy('song');
+	switchTab('song');
 });
 
 document.getElementById('nav-tab-albums').addEventListener('click', function() {
-	filterBy('album');
+	switchTab('album');
 });
 
 document.getElementById('nav-tab-genre').addEventListener('click', function() {
-	filterBy('genre');
+	switchTab('genre');
 });
 
 document.getElementById('nav-tab-search').addEventListener('click', function() {
