@@ -329,10 +329,20 @@ function filterBy(mode, secondFilter, omitFromHistory) {
 	var listView = document.getElementById('nav-list-view');
 	listView.innerHTML = ""  // clear the list
 
+	// slice(0) clones the array
+	// we need this because sort() sorts IN-PLACE *and* returns the array
+	songsToFilter = SONGS.slice(0).sort(function(a, b) {
+		var varA = a[key].toLowerCase();
+		var varB = b[key].toLowerCase();
+		if (varA < varB) { return -1; }
+		else if (varA > varB) { return 1; }
+		else { return 0; }
+	});
+
 	// create the set of items to display (set so we don't display the same album/artist/genre twice)
 	var result = new Set();  // EC6 only
-	for(var i = 0; i < SONGS.length; i++) {
-		var song = SONGS[i];
+	for(var i = 0; i < songsToFilter.length; i++) {
+		var song = songsToFilter[i];
 		if (result.has(song[key])) {
 			continue;
 		}
