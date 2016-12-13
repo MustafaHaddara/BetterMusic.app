@@ -672,7 +672,7 @@ function buildSearchHistory() {
 // EVENT LISTENERS
 // INITIAL STATE
 document.addEventListener("DOMContentLoaded", function(event) {
-	updateUpNextButton();
+	updateNowPlayingSongInformation();
 });
 
 // TRANSITIONS
