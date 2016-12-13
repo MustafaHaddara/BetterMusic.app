@@ -387,8 +387,6 @@ input, textarea {
 
 #now-playing-close-button {
 	position: absolute;
-	color: #FFFFFF;
-	text-shadow: 2pt 0 0 #000000, -2pt 0 0 #000000, 0 2pt 0 #000000, 0 -2pt 0 #000000, 1pt 1pt #000000, -1pt -1pt 0 #000000, 1pt -1pt 0 #000000, -1pt 1pt 0 #000000;
 }
 
 .close-button {
@@ -397,8 +395,8 @@ input, textarea {
 	width: 375pt;
 	font-size: 36pt;
 	z-index: 3;
-	color: rgba(0,0,0,0.5);
-	text-shadow: 0pt 8pt 0; /* FIXME ugly hack instead of finding a nice icon */
+	color: #FFFFFF;
+	text-shadow: 2pt 0 0 #000000, -2pt 0 0 #000000, 0 2pt 0 #000000, 0 -2pt 0 #000000, 1pt 1pt #000000, -1pt -1pt 0 #000000, 1pt -1pt 0 #000000, -1pt 1pt 0 #000000;
 }
 
 #now-playing-playback-controls {
