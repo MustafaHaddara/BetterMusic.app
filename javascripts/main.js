@@ -44,8 +44,8 @@ function Queue() {
 	this.move = function() {
 
 	}
-	this.remove = function(idx) {
-		this._queue.splice(idx, 1);
+	this.remove = function(selectionIndex) {
+		this._queue = this._queue.filter(function(element, queueIndex) { return selectionIndex !== queueIndex; });
 	}
 	this.queue = function() {
 		return this._queue;
@@ -136,11 +136,16 @@ function switchSubView(viewName) {
 	setHeader(viewName=='nav-list-view' ? (LIST_VIEW_MODE + 's') : 'Search');
 }
 
+function switchTab(tabName) {
+	LIBRARY_STATES = [];
+	filterBy(tabName);
+}
+
 function goToSearchView() {
 	document.getElementById('search-input').value = "";
 	buildSearchHistory();
 	switchSubView('nav-search-view');
-	LIBRARY_STATES.push(function() { switchSubView('nav-search-view'); });
+	LIBRARY_STATES = [goToSearchView];
 	document.getElementById('search-input').focus();
 }
 
@@ -281,8 +286,6 @@ function toggleShuffle() {
 	}
 }
 
-
-
 // TODO add a back button from search results
 function searchBy(searchTerm) {
 	// populate this listview
@@ -302,14 +305,15 @@ function searchBy(searchTerm) {
 			song['album'].toLowerCase().startsWith(st) || 
 			song['artist'].toLowerCase().startsWith(st)) {
 			result.add(song['name']);
-			var song = buildSongListItem(song, 'song');
+			var song = buildSongListItem(song, 'song', i);
 			listView.appendChild(song);
 		}
 	}
-	switchSubView('nav-list-view'); // go to list view
-	setHeader("Search for: " + searchTerm);
 	LIBRARY_STATES.push(function() { searchBy(searchTerm); });
 	RECENT_SEARCHES.push(searchTerm);
+
+	switchSubView('nav-list-view'); // go to list view
+	setHeader("Search for: " + searchTerm);
 }
 
 // filter our songs according to a mode (ie. attribute)
@@ -318,17 +322,26 @@ function searchBy(searchTerm) {
 function filterBy(mode, secondFilter, omitFromHistory) {
 	// set the global mode (we'll use this for the header)
 	LIST_VIEW_MODE = mode;
-	setHeader(mode + 's') ;
 	var key = (mode=='song'? 'name': mode);
 
 	// populate this listview
 	var listView = document.getElementById('nav-list-view');
 	listView.innerHTML = ""  // clear the list
 
+	// slice(0) clones the array
+	// we need this because sort() sorts IN-PLACE *and* returns the array
+	songsToFilter = SONGS.slice(0).sort(function(a, b) {
+		var varA = a[key].toLowerCase();
+		var varB = b[key].toLowerCase();
+		if (varA < varB) { return -1; }
+		else if (varA > varB) { return 1; }
+		else { return 0; }
+	});
+
 	// create the set of items to display (set so we don't display the same album/artist/genre twice)
 	var result = new Set();  // EC6 only
-	for(var i = 0; i < SONGS.length; i++) {
-		var song = SONGS[i];
+	for(var i = 0; i < songsToFilter.length; i++) {
+		var song = songsToFilter[i];
 		if (result.has(song[key])) {
 			continue;
 		}
@@ -338,12 +351,23 @@ function filterBy(mode, secondFilter, omitFromHistory) {
 			continue;
 		}
 		result.add(song[key]);
-		var song = buildSongListItem(song, LIST_VIEW_MODE);
+		var song = buildSongListItem(song, LIST_VIEW_MODE, i);
 		listView.appendChild(song);
 	}
 	switchSubView('nav-list-view'); // go to library
 	if (!omitFromHistory) {
 		LIBRARY_STATES.push(function() { filterBy(mode, secondFilter, true); }); // for back button
+	}
+
+	setHeader(mode + 's');
+}
+
+function updateBackButton() {
+	if (LIBRARY_STATES.length <= 1) {
+		// if we have no where to go back to, don't show the back button
+		document.getElementById('nav-header-back-button').style.display = 'none';
+	} else {
+		document.getElementById('nav-header-back-button').style.display = 'inline';
 	}
 }
 
@@ -369,7 +393,6 @@ var tm = function(ev) {
 		nop_click = true;
 	}
 }
-
 
 var mu = function(ev) {
 	var pos = (initial_pos - ev.clientX);
@@ -413,6 +436,10 @@ function addToQueue(div) {
 	queue.append(parseInt(div.dataset.id, 10));
 }
 
+function removefromQueue(div) {
+	queue.remove(parseInt(div.dataset.counter, 10));
+}
+
 document.addEventListener('mousemove', mm);
 document.addEventListener('touchmove', tm);
 document.addEventListener('mouseup', mu);
@@ -439,7 +466,7 @@ document.addEventListener('touchstart', function() {
 	}
 });
 
-function buildSongListItem(songObj, mode) {
+function buildSongListItem(songObj, mode, counter) {
 	var el = document.createElement('li');
 	var clickCallback = function() {
 		console.log('No callback implemented');
@@ -491,6 +518,7 @@ function buildSongListItem(songObj, mode) {
 		div2.innerText = "Add to Queue";
 		var map_thing = {'song-StereoLove': 0, "song-WereInHeaven": 1, "song-Voltaic": 2};
 		div2.dataset.id = map_thing[songObj['id']];
+		div2.dataset.counter = counter;
 		div2.style.backgroundColor = "#FF0000";
 		div2.addEventListener('mousedown', function() {addToQueue(div2);}); // It never gets mouseup
 		el.appendChild(div2);
@@ -500,6 +528,8 @@ function buildSongListItem(songObj, mode) {
 			} else {
 				playSongById(map_thing[songObj['id']]);
 			}
+			//removefromQueue(div2);
+			//playSongById(map_thing[songObj['id']]);
 		}
 	} else {
 		// create list node
@@ -533,6 +563,7 @@ function buildSongListItem(songObj, mode) {
 
 function setHeader(newText) {
 	document.getElementById('nav-header-text').innerText = newText;
+	updateBackButton();
 }
 
 function back() {
@@ -547,7 +578,7 @@ function buildQueue() {
 	listView.innerHTML = "";  // clear the list
 	for(var i = 0; i < queue.queue().length; i++) {
 		var idx = queue.queue()[i];
-		var song = buildSongListItem(SONGS[idx], 'song');
+		var song = buildSongListItem(SONGS[idx], 'song', i);
 		listView.appendChild(song);
 	}
 }
@@ -586,19 +617,19 @@ document.getElementById('queue-close-button').addEventListener('click', function
 document.getElementById('nav-header-back-button').addEventListener('click', back);
 
 document.getElementById('nav-tab-artists').addEventListener('click', function() {
-	filterBy('artist');
+	switchTab('artist');
 });
 
 document.getElementById('nav-tab-songs').addEventListener('click', function() {
-	filterBy('song');
+	switchTab('song');
 });
 
 document.getElementById('nav-tab-albums').addEventListener('click', function() {
-	filterBy('album');
+	switchTab('album');
 });
 
 document.getElementById('nav-tab-genre').addEventListener('click', function() {
-	filterBy('genre');
+	switchTab('genre');
 });
 
 document.getElementById('nav-tab-search').addEventListener('click', function() {
