@@ -612,12 +612,24 @@ function seekPercent(percent) {
 
 }
 document.getElementById('now-playing-progress-control-l').addEventListener('mousedown', function() {abcd = true;});
+document.getElementById('now-playing-progress-control-l').addEventListener('touchstart', function() {abcd = true;});
+
+document.getElementById('now-playing-progress-control-r').addEventListener('mousedown', function() {abcd = true;});
+document.getElementById('now-playing-progress-control-r').addEventListener('touchstart', function() {abcd = true;});
 document.addEventListener('mousemove', function(ev) {
 	if(abcd) {
 		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.clientY+document.getElementsByTagName('html')[0].scrollTop-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
 	}
 });
+
+document.addEventListener('touchmove', function(ev) {
+	if(abcd) {
+		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.touches[0].clientY+document.getElementsByTagName('html')[0].scrollTop-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
+	}
+});
+
 document.addEventListener('mouseup', function() {abcd = false;});
+document.addEventListener('touchend', function() {abcd = false;});
 
 
 // QUEUE VIEW

@@ -67,6 +67,39 @@ html, body {
 	border-bottom: 1px solid #000000;
 }
 
+#mini-bar-album-art {
+	float: left;
+}
+
+#mini-bar-song {
+	margin-top: 7pt;
+	margin-left: 5pt;
+	overflow: hidden;
+}
+
+#mini-bar-next-button, #mini-bar-play-button {
+	margin-top: 7pt;
+	margin-left: 5pt;
+}
+
+#queue-mini-bar-album-art {
+	float: left;
+}
+
+#queue-mini-bar {
+	overflow: hidden;
+}
+
+#queue-mini-bar-song {
+	margin-top: 7pt;
+	margin-left: 5pt;
+}
+
+#queue-mini-bar-next-button, #queue-mini-bar-play-button {
+	margin-top: 7pt;
+	/*margin-left: 5pt;*/
+}
+
 #nav-list-view > li > .swiper {
 	display: flex;
 	width: 100%;
@@ -159,7 +192,7 @@ html, body {
 	width: 100%;
 	border-bottom: 1px solid #000000;
 	border-top: 1px solid #000000;
-	overflow: auto;
+	overflow: hidden;
 }
 
 #mini-bar > div {
@@ -167,7 +200,8 @@ html, body {
 }
 
 #mini-bar-album-art {
-	min-width: 48pt;
+	width: 48pt;
+	height: 48pt;
 }
 
 #mini-bar-album-art > img {
@@ -455,15 +489,17 @@ input, textarea {
 	width: 100%;
 	border-bottom: 1px solid #000000;
 	border-top: 1px solid #000000;
-	overflow: auto;
+	overflow: hidden;
 }
 
 #queue-mini-bar > div {
 	display: inline-block;
 }
 
+
 #queue-mini-bar-album-art {
-	min-width: 48pt;
+	width: 48pt;
+	height: 48pt;
 }
 
 #queue-mini-bar-album-art > img {
