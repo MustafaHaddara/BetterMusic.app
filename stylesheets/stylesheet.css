@@ -387,6 +387,8 @@ input, textarea {
 
 #now-playing-close-button {
 	position: absolute;
+	color: #FFFFFF;
+	text-shadow: 2pt 0 0 #000000, -2pt 0 0 #000000, 0 2pt 0 #000000, 0 -2pt 0 #000000, 1pt 1pt #000000, -1pt -1pt 0 #000000, 1pt -1pt 0 #000000, -1pt 1pt 0 #000000;
 }
 
 .close-button {

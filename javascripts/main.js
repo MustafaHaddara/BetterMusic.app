@@ -207,6 +207,7 @@ function nextSong() {
 		} else {
 			previous_song_queue.append(NOW_PLAYING_SONG);
 			NOW_PLAYING_SONG = next;
+			player.setSong(NOW_PLAYING_SONG);
 		}
 		AUTO_PLAY_NEXT_SONG_IN_QUEUE = false;
 		if(next != null) {
@@ -228,25 +229,25 @@ function nextSong() {
 function prevSong() {
 	console.log('Back to previous song');
 
-	if (!(document.getElementById(SONGS[NOW_PLAYING_SONG].id).paused) && document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime > 0) {
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).pause();
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).currentTime = 0;
+	if (!player.paused() && player.currentTime() > 0) {
+		player.pause();
 		var last = previous_song_queue.last();
 		if(last == null) {
-			//
+			player.seek(0);
 		} else {
 			queue.prepend(NOW_PLAYING_SONG);
-			NOW_PLAYING_SONG=last;;
+			NOW_PLAYING_SONG=last;
+			player.setSong(NOW_PLAYING_SONG);
 		}
 		last_update = performance.now();
-		document.getElementById(SONGS[NOW_PLAYING_SONG].id).play();
+		player.play();
 	} else {
 		var last = previous_song_queue.last();
 		if(last == null) {
 			//
 		} else {
 			queue.prepend(NOW_PLAYING_SONG);
-			NOW_PLAYING_SONG=last;;
+			NOW_PLAYING_SONG=last;
 		}
 	}
 	updateNowPlayingSongInformation();
@@ -518,17 +519,30 @@ function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 			div2.addEventListener('touchstart', function() {addToQueue(div2);}); // It never gets mouseup
 		}
 		var map_thing = {'song-StereoLove': 0, "song-WereInHeaven": 1, "song-Voltaic": 2};
-		div2.dataset.id = map_thing[songObj['id']];
+		div2.dataset.id = songObj.index;
 		div2.dataset.counter = counter;
 		el.appendChild(div2);
-		clickCallback = function() {
-			if (nop_click) {
-				nop_click = false;
-			} else {
-				playSongById(map_thing[songObj['id']]);
+		if(queue_mode) {
+			clickCallback = function() {
+				if (nop_click) {
+					nop_click = false;
+				} else {
+					removefromQueue(div2);
+					playSongById(songObj.index);
+				}
+				//removefromQueue(div2);
+				//playSongById(map_thing[songObj['id']]);
 			}
-			//removefromQueue(div2);
-			//playSongById(map_thing[songObj['id']]);
+		} else {
+			clickCallback = function() {
+				if (nop_click) {
+					nop_click = false;
+				} else {
+					playSongById(songObj.index);
+				}
+				//removefromQueue(div2);
+				//playSongById(map_thing[songObj['id']]);
+			}
 		}
 	} else {
 		// create list node
