@@ -154,6 +154,39 @@ function updateNowPlayingSongInformation() {
 	document.getElementById('mini-bar-album-art-img').src =  SONGS[NOW_PLAYING_SONG].albumArt;
 	document.getElementById('queue-mini-bar-album-art-img').src =  SONGS[NOW_PLAYING_SONG].albumArt;
 	document.getElementById('now-playing-song-details-container').scrollLeft = 0;
+	updateUpNextButton();
+}
+
+function updateUpNextButton() {
+	var q = queue.queue()
+	var button = document.getElementById('now-playing-queue-button');
+	var width = button.offsetWidth;
+	var height = button.offsetHeight;
+	var xinc = width/5;
+
+	var top = button.offsetTop;
+	var leftOffset = (width - (xinc * q.length)) / 2
+	var left = button.offsetLeft + leftOffset;
+	
+	for (var i=0; i<5; i++) {
+		var img = document.getElementById('now-playing-queue-img-' + i);
+		if (i>=q.length) {
+			// hide the img
+			img.style.display = 'none';
+			continue;
+		}
+		var songId = q[i];
+		// set the album art
+		img.src = SONGS[songId]['albumArt'];
+		// size and position
+		img.style.zIndex = (5-i); // first images higher up
+		img.style.opacity = 1.0 - (0.2*i)  // 1.0, 0.8, 0.6, 0.4, 0.2
+		img.style.height = (height - (6*i)) + 'px';
+		img.style.left = left + (i*xinc) + 'px';
+		img.style.top = top + (i*3) + 'px';
+		// show the img
+		img.style.display = 'inline';
+	}
 }
 
 function play() {
@@ -637,6 +670,11 @@ function buildSearchHistory() {
 }
 
 // EVENT LISTENERS
+// INITIAL STATE
+document.addEventListener("DOMContentLoaded", function(event) {
+	updateUpNextButton();
+});
+
 // TRANSITIONS
 document.getElementById('now-playing-close-button').addEventListener('click', function() {
 	switchView('nav-view');

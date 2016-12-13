@@ -489,6 +489,10 @@ input, textarea {
 	width: 85%;
 }
 
+#now-playing-queue-button > img {
+	position: absolute;
+}
+
 #now-playing-shuffle-button > button  {
 	height:auto;
 	width:50%;
