@@ -156,7 +156,7 @@ var SONGS = [
         "artist": "Kevin MacLeod",
         "album": "",
         "genre": "Unclassified",
-        "albumArt": "Royalty Free",
+        "albumArt": "images/unknown.png",
         "audio": "audio/Slow Jam.mp3",
         "duration": 266
     },{
