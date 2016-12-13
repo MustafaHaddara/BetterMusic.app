@@ -510,10 +510,12 @@ function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 			div2.innerText = "Delete";
 			div2.style.backgroundColor = "#FF0000";
 			div2.addEventListener('mousedown', function() {removefromQueue(div2);}); // It never gets mouseup
+			div2.addEventListener('touchstart', function() {removefromQueue(div2);}); // It never gets mouseup
 		} else {
 			div2.innerText = "Add to Queue";
 			div2.style.backgroundColor = "#00FF00";
 			div2.addEventListener('mousedown', function() {addToQueue(div2);}); // It never gets mouseup
+			div2.addEventListener('touchstart', function() {addToQueue(div2);}); // It never gets mouseup
 		}
 		var map_thing = {'song-StereoLove': 0, "song-WereInHeaven": 1, "song-Voltaic": 2};
 		div2.dataset.id = map_thing[songObj['id']];
