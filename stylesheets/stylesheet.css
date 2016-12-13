@@ -65,6 +65,7 @@ html, body {
 	/*height: 43pt;*/
 	display: flex;
 	border-bottom: 1px solid #000000;
+	transform-style: preserve-3d;
 }
 
 #mini-bar-album-art {
@@ -110,8 +111,9 @@ html, body {
 }
 
 .button-thing {
+	width: 70pt;
 	position:absolute;
-	left:0;
+	left: calc(100% - 70pt);
 	z-index: 1;
 }
 

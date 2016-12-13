@@ -190,7 +190,6 @@ function togglePlay() {
 function playSongById(songId) {
 	pause(); // stop current song
 	// find index of song
-	queue.clear();
 	NOW_PLAYING_SONG = songId;
 	// start from beginning
 	player.setSong(NOW_PLAYING_SONG);
@@ -352,35 +351,40 @@ var on_thing = undefined;
 var initial_pos = 0;
 var thing_open = false;
 var nop_mu = false;
+var nop_click = false;
 var mm = function(ev) {
 	if(on_thing !== undefined && !thing_open) {
-		var pos = (ev.clientX -initial_pos) ;
+		var pos = (initial_pos - ev.clientX);
 		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
-		on_thing.style.left = (pos > sz?sz:(pos < 0?0:pos)) + 'px';
+		on_thing.style.right = (pos > sz?sz:(pos < 0?0:pos)) + 'px';
+		nop_click = true;
 	}
 }
 
 var tm = function(ev) {
 	if(on_thing !== undefined && !thing_open) {
-		var pos = (ev.touches[0].clientX -initial_pos) ;
+		var pos = (initial_pos - ev.touches[0].clientX);
 		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
-		on_thing.style.left = (pos > sz?sz:(pos < 0?0:pos)) + 'px';
+		on_thing.style.right = (pos > sz?sz:(pos < 0?0:pos)) + 'px';
+		nop_click = true;
 	}
 }
 
 
 var mu = function(ev) {
-	var pos = (ev.clientX -initial_pos);
+	var pos = (initial_pos - ev.clientX);
 	var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
 	console.log(pos);
 	console.log(sz);
+	console.log('b');
 	if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
-		on_thing.style.left = sz + 'px'; // TODO: Smooth out
+		console.log('c');
+		on_thing.style.right = sz + 'px'; // TODO: Smooth out
 		thing_open = true;
 	} else {
 		if(on_thing !== undefined) {
 			initial_pos = 0;
-			on_thing.style.left = '0px'; // TODO: Smooth out
+			on_thing.style.right = '0px'; // TODO: Smooth out
 			on_thing = undefined;
 		}
 	}
@@ -388,17 +392,17 @@ var mu = function(ev) {
 }
 
 var te = function(ev) {
-	var pos = (ev.touches[0].clientX -initial_pos);
+	var pos = (initial_pos - ev.touches[0].clientX);
 	var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
 	console.log(pos);
 	console.log(sz);
 	if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
-		on_thing.style.left = sz + 'px'; // TODO: Smooth out
+		on_thing.style.right = sz + 'px'; // TODO: Smooth out
 		thing_open = true;
 	} else {
 		if(on_thing !== undefined) {
 			initial_pos = 0;
-			on_thing.style.left = '0px'; // TODO: Smooth out
+			on_thing.style.right = '0px'; // TODO: Smooth out
 			on_thing = undefined;
 		}
 	}
@@ -416,19 +420,22 @@ document.addEventListener('touchend', te);
 
 document.addEventListener('mousedown', function() {
 	if(on_thing !== undefined) {
+		console.log('a');
 		thing_open = false;
-		on_thing.style.left = '0px';
+		on_thing.style.right = '0px';
 		open_thing = undefined;
 		nop_mu = true;
+		nop_click = true;
 	}
 });
 
 document.addEventListener('touchstart', function() {
 	if(on_thing !== undefined) {
 		thing_open = false;
-		on_thing.style.left = '0px';
+		on_thing.style.right = '0px';
 		open_thing = undefined;
 		nop_mu = true;
+		nop_click = true;
 	}
 });
 
@@ -488,7 +495,11 @@ function buildSongListItem(songObj, mode) {
 		div2.addEventListener('mousedown', function() {addToQueue(div2);}); // It never gets mouseup
 		el.appendChild(div2);
 		clickCallback = function() {
-			playSongById(map_thing[songObj['id']]);
+			if (nop_click) {
+				nop_click = false;
+			} else {
+				playSongById(map_thing[songObj['id']]);
+			}
 		}
 	} else {
 		// create list node
