@@ -186,6 +186,9 @@ function nextSong() {
 	if (!(player.paused()) && player.currentTime() > 0 || AUTO_PLAY_NEXT_SONG_IN_QUEUE) {
 		player.pause();
 		var next = queue.first();
+		if (REPEAT) {
+			queue.append(NOW_PLAYING_SONG);
+		}
 		if(next == null) {
 			pause();
 			player.seek(0);
@@ -244,9 +247,8 @@ function toggleRepeat() {
 	} else {
 		document.getElementById('now-playing-repeat-button').children[0].src = 'images/icons-png/icon-_0011_RepeatOn.png';
 	}
+	// functionality
 	REPEAT = !REPEAT;
-	// TODO: FUNCTIONAL IMPLEMENTATION
-	console.log('repeat is ' + (REPEAT? 'on':'off'));
 }
 
 function toggleShuffle() {
