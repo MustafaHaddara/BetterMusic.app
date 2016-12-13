@@ -650,7 +650,7 @@ if (typeof document.hidden !== "undefined") {
 var last_update = 0;
 
 function redrawStuff(ts) {
-	if(!player.paused() && !document[hidden]) {
+	if(!document[hidden]) {
 		var len = player.duration();
 		var percent = player.currentTime()/len;
 		document.getElementById('now-playing-art-bw-container').style.height = Math.floor((1-percent)*375)+'pt';
