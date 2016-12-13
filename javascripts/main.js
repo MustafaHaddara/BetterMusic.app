@@ -19,6 +19,7 @@ document.getElementById('audioDiv').addEventListener('ended', function() {
 // TODO: optional fixed size
 function Queue() {
 	this._queue = [];
+	this._old_queue = []; // for shuffling
 	this.first = function() {
 		if (this._queue.length > 0) {
 			return this._queue.shift();
@@ -49,7 +50,21 @@ function Queue() {
 	this.queue = function() {
 		return this._queue;
 	}
+	this.shuffle = function() {
+		this._old_queue = this._queue.slice(0);
+		shuffleArray(this._queue);
+	}
+	this.unshuffle = function() {
+		this._queue = this._old_queue.slice(0);
+	}
 };
+
+function shuffleArray(a) {
+    for (let i = a.length; i; i--) {
+        let j = Math.floor(Math.random() * i);
+        [a[i - 1], a[j]] = [a[j], a[i - 1]];
+    }
+}
 
 function Player() {
 	var currentSongDivName = "audioDiv";
@@ -258,10 +273,16 @@ function toggleShuffle() {
 	} else {
 		document.getElementById('now-playing-shuffle-button').children[0].src = 'images/icons-png/icon-_0013_ShuffleOn.png'
 	}
+	// functionality
 	SHUFFLE = !SHUFFLE;
-	// TODO: FUNCTIONAL IMPLEMENTATION
-	console.log('shuffle is ' + (SHUFFLE? 'on':'off'));
+	if (SHUFFLE) {
+		queue.shuffle();
+	} else {
+		queue.unshuffle();
+	}
 }
+
+
 
 // TODO add a back button from search results
 function searchBy(searchTerm) {
