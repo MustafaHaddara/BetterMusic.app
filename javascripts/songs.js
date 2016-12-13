@@ -5,7 +5,7 @@ var SONGS = [
         "artist": "Edward Maya ft. Alicia",
         "album": "Stereo Love [Album]",
         "genre": "Electronic",
-        "albumArt":"../images/album-art-big.jpg",
+        "albumArt":"https://upload.wikimedia.org/wikipedia/en/f/fe/MiaDevotion.jpg",
         "duration":247
     },
     {
@@ -14,7 +14,7 @@ var SONGS = [
         "artist": "DJ Sammy",
         "album": "Heaven",
         "genre": "Dance",
-        "albumArt":"../images/album-art-big.jpg",
+        "albumArt":"https://upload.wikimedia.org/wikipedia/en/b/b2/DJ_Sammy_-_Heaven.jpg",
         "duration":120
     },
     {
@@ -27,3 +27,6 @@ var SONGS = [
         "duration": 180
     }
 ];
+
+// All images are used under the 'Research' clause of Fair Use. 
+// All are hotlinked from Wikimedia which is allowed, but discouraged as the image may change. Which we acknowledge.
