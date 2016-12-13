@@ -438,6 +438,7 @@ function addToQueue(div) {
 
 function removefromQueue(div) {
 	queue.remove(parseInt(div.dataset.counter, 10));
+	buildQueue();
 }
 
 document.addEventListener('mousemove', mm);
@@ -683,13 +684,14 @@ document.getElementById('now-playing-progress-control-r').addEventListener('mous
 document.getElementById('now-playing-progress-control-r').addEventListener('touchstart', function() {abcd = true;});
 document.addEventListener('mousemove', function(ev) {
 	if(abcd) {
-		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.clientY+document.getElementsByTagName('html')[0].scrollTop-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
+		console.log(ev.clientY);
+		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.clientY-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
 	}
 });
 
 document.addEventListener('touchmove', function(ev) {
 	if(abcd) {
-		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.touches[0].clientY+document.getElementsByTagName('html')[0].scrollTop-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
+		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.touches[0].clientY-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
 	}
 });
 
