@@ -127,9 +127,12 @@ function updateNowPlayingSongInformation() {
 	document.getElementById('now-playing-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
 	document.getElementById('mini-bar-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
 	document.getElementById('mini-bar-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
+	document.getElementById('queue-mini-bar-song-title').innerText = SONGS[NOW_PLAYING_SONG].name;
+	document.getElementById('queue-mini-bar-song-details').innerText = SONGS[NOW_PLAYING_SONG].artist + ' - ' + SONGS[NOW_PLAYING_SONG].album;
 	document.getElementById('now-playing-art-color').src =  SONGS[NOW_PLAYING_SONG].albumArt;
 	document.getElementById('now-playing-art-bw').src =  SONGS[NOW_PLAYING_SONG].albumArt;
 	document.getElementById('mini-bar-album-art-img').src =  SONGS[NOW_PLAYING_SONG].albumArt;
+	document.getElementById('queue-mini-bar-album-art-img').src =  SONGS[NOW_PLAYING_SONG].albumArt;
 	document.getElementById('now-playing-song-details-container').scrollLeft = 0;
 }
 
@@ -165,13 +168,8 @@ function togglePlay() {
 function playSongById(songId) {
 	pause(); // stop current song
 	// find index of song
-	for (var i=0; i<SONGS.length; i++) {
-		if (SONGS[i].id == songId) {
-			queue.clear();
-			NOW_PLAYING_SONG = songId;;
-			break;
-		}
-	}
+	queue.clear();
+	NOW_PLAYING_SONG = songId;;
 	// start from beginning
 	music_analog.currentTime = 0;
 	play();
