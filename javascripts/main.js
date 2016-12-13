@@ -79,13 +79,6 @@ function Player() {
 		return document.getElementById(currentSongDivName).currentTime;
 	}
 	this.duration = function() {
-		if(last_audio == 0) {
-			try {
-				last_audio = document.getElementById(currentSongDivName).seekable.end(0);
-			} catch(e) {
-				last_audio = 0;
-			}
-		}
 		return last_audio;
 	}
 	this.seek = function(percent) {
@@ -94,8 +87,8 @@ function Player() {
 	this.setSong = function(idx) {
 		document.getElementById("audioDiv").src = SONGS[idx].audio;
 		document.getElementById("audioDiv").load();
+		last_audio = SONGS[idx].duration;
 		document.getElementById("audioDiv").currentTime = 0;
-		last_audio = 0;
 	}
 	this.paused = function() {
 		return document.getElementById(currentSongDivName).paused;
@@ -396,13 +389,9 @@ var tm = function(ev) {
 
 var mu = function(ev) {
 	var pos = (initial_pos - ev.clientX);
-	var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
-	console.log(pos);
-	console.log(sz);
-	console.log('b');
-	if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
+	if (on_thing !== undefined && pos >= 0.5*parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width) && !nop_mu) {
 		console.log('c');
-		on_thing.style.right = sz + 'px'; // TODO: Smooth out
+		on_thing.style.right = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width); + 'px'; // TODO: Smooth out
 		thing_open = true;
 	} else {
 		if(on_thing !== undefined) {
@@ -416,11 +405,8 @@ var mu = function(ev) {
 
 var te = function(ev) {
 	var pos = (initial_pos - ev.touches[0].clientX);
-	var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
-	console.log(pos);
-	console.log(sz);
-	if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
-		on_thing.style.right = sz + 'px'; // TODO: Smooth out
+	if (on_thing!==undefined && pos >= 0.5*parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width) && !nop_mu) {
+		on_thing.style.right = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width); + 'px'; // TODO: Smooth out
 		thing_open = true;
 	} else {
 		if(on_thing !== undefined) {
@@ -438,6 +424,7 @@ function addToQueue(div) {
 
 function removefromQueue(div) {
 	queue.remove(parseInt(div.dataset.counter, 10));
+	buildQueue();
 }
 
 document.addEventListener('mousemove', mm);
@@ -466,7 +453,7 @@ document.addEventListener('touchstart', function() {
 	}
 });
 
-function buildSongListItem(songObj, mode, counter) {
+function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 	var el = document.createElement('li');
 	el.id = 'nav-list-view-elements'
 	var clickCallback = function() {
@@ -519,12 +506,20 @@ function buildSongListItem(songObj, mode, counter) {
 		el.appendChild(div);
 		var div2 = document.createElement('div');
 		div2.className = 'button-thing';
-		div2.innerText = "Add to Queue";
+		if (queue_mode) {
+			div2.innerText = "Delete";
+			div2.style.backgroundColor = "#FF0000";
+			div2.addEventListener('mousedown', function() {removefromQueue(div2);}); // It never gets mouseup
+			div2.addEventListener('touchstart', function() {removefromQueue(div2);}); // It never gets mouseup
+		} else {
+			div2.innerText = "Add to Queue";
+			div2.style.backgroundColor = "#00FF00";
+			div2.addEventListener('mousedown', function() {addToQueue(div2);}); // It never gets mouseup
+			div2.addEventListener('touchstart', function() {addToQueue(div2);}); // It never gets mouseup
+		}
 		var map_thing = {'song-StereoLove': 0, "song-WereInHeaven": 1, "song-Voltaic": 2};
 		div2.dataset.id = map_thing[songObj['id']];
 		div2.dataset.counter = counter;
-		div2.style.backgroundColor = "#FF0000";
-		div2.addEventListener('mousedown', function() {addToQueue(div2);}); // It never gets mouseup
 		el.appendChild(div2);
 		clickCallback = function() {
 			if (nop_click) {
@@ -582,7 +577,7 @@ function buildQueue() {
 	listView.innerHTML = "";  // clear the list
 	for(var i = 0; i < queue.queue().length; i++) {
 		var idx = queue.queue()[i];
-		var song = buildSongListItem(SONGS[idx], 'song', i);
+		var song = buildSongListItem(SONGS[idx], 'song', i, true);
 		listView.appendChild(song);
 	}
 }
@@ -687,13 +682,14 @@ document.getElementById('now-playing-progress-control-r').addEventListener('mous
 document.getElementById('now-playing-progress-control-r').addEventListener('touchstart', function() {abcd = true;});
 document.addEventListener('mousemove', function(ev) {
 	if(abcd) {
-		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.clientY+document.getElementsByTagName('html')[0].scrollTop-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
+		console.log(ev.clientY);
+		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.clientY-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
 	}
 });
 
 document.addEventListener('touchmove', function(ev) {
 	if(abcd) {
-		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.touches[0].clientY+document.getElementsByTagName('html')[0].scrollTop-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
+		seekPercent((document.getElementById('now-playing-art-color').offsetHeight-(ev.touches[0].clientY-document.getElementById('now-playing-art-color').getBoundingClientRect().top))/document.getElementById('now-playing-art-color').offsetHeight);
 	}
 });
 
@@ -733,10 +729,12 @@ var last_update = 0;
 function redrawStuff(ts) {
 	if(!document[hidden]) {
 		var len = player.duration();
+		len = len == 0?1:len;
 		var percent = player.currentTime()/len;
+		len = player.duration();
 		document.getElementById('now-playing-art-bw-container').style.height = Math.floor((1-percent)*375)+'pt';
 		document.getElementById('now-playing-progress-control').style.top = Math.floor(((1-percent)*375)+10) + 'pt';
-		var thing = (Math.round(player.currentTime() - Math.floor(player.currentTime()/60)*60) + '');
+		var thing = (Math.floor(player.currentTime() - Math.floor(player.currentTime()/60)*60) + '');
 		thing = Math.floor(player.currentTime()/60) + ':' + (thing.length < 2? '0':'') + thing;
 		document.getElementById('now-playing-progress-control-l').innerText = thing;
 		document.getElementById('now-playing-progress-control-r').innerText = thing;
