@@ -10,8 +10,9 @@ var RECENT_SEARCHES = [];
 
 var AUTO_PLAY_NEXT_SONG_IN_QUEUE = false; 
 
-document.getElementById(SONGS[NOW_PLAYING_SONG].id).addEventListener('ended', function() {
+document.getElementById('audioDiv').addEventListener('ended', function() {
 	AUTO_PLAY_NEXT_SONG_IN_QUEUE = true;
+	console.log('abcd');
 	nextSong();
 });
 
@@ -51,51 +52,56 @@ function Queue() {
 };
 
 function Player() {
+	var currentSongDivName = "audioDiv";
+	var last_audio = document.getElementById(currentSongDivName).seekable.end(0);
 	this.play = function() {
-
+		document.getElementById(currentSongDivName).play();
 	}
 	this.pause = function() {
-
+		document.getElementById(currentSongDivName).pause();
 	}
 	this.currentTime = function() {
-
+		return document.getElementById(currentSongDivName).currentTime;
 	}
-	this.seek = function(time) {
-
+	this.duration = function() {
+		return last_audio;
+	}
+	this.seek = function(percent) {
+		document.getElementById("audioDiv").currentTime = this.duration()*percent;
 	}
 	this.setSong = function(idx) {
-
+		document.getElementById("audioDiv").src = SONGS[idx].audio;
+		document.getElementById("audioDiv").load();
+		document.getElementById("audioDiv").play();
+		document.getElementById("audioDiv").currentTime = 0;
+		var f = true;
+		while(f) {
+			try {
+				last = document.getElementById(currentSongDivName).seekable.end(0);
+			} catch (e) {
+				f = false;
+			}
+		}
 	}
 	this.paused = function() {
-
+		return document.getElementById(currentSongDivName).paused;
 	}
 }
 
 var queue = new Queue();
 
+queue.append(0);
+queue.append(1);
+queue.append(2);
+queue.append(1);
+
 var previous_song_queue = new Queue();
+
+var player = new Player();
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	filterBy('song'); // initial default state
 });
-
-var music_analog = createAudioOfLength(247);
-
-function createAudioOfLength(time) {
-	var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-	var size = audioCtx.sampleRate * time;
-	var buf = audioCtx.createBuffer(1, size, audioCtx.sampleRate);
-	var source = audioCtx.createBufferSource();
-	source.buffer = buf;
-	source.connect(audioCtx.destination);
-	source.start();
-	audioCtx.suspend();
-	source.onended = function() {
-		pause();
-		music_analog = createAudioOfLength(time);
-	}
-	return source;
-}
 
 // FUNCTIONS
 function switchView(viewName) {
@@ -142,7 +148,7 @@ function play() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/pause-button.png'
 	// functionality
-	music_analog.context.resume();
+	player.play();
 	updateNowPlayingSongInformation();
 }
 
@@ -152,7 +158,7 @@ function pause() {
 	document.getElementById('mini-bar-play-button').children[0].src = 'images/play-button.png'
 	document.getElementById('queue-mini-bar-play-button').children[0].src = 'images/play-button.png'
 	// functionality
-	music_analog.context.suspend();
+	player.pause();
 	updateNowPlayingSongInformation();
 }
 
@@ -169,26 +175,28 @@ function playSongById(songId) {
 	pause(); // stop current song
 	// find index of song
 	queue.clear();
-	NOW_PLAYING_SONG = songId;;
+	NOW_PLAYING_SONG = songId;
 	// start from beginning
-	music_analog.currentTime = 0;
+	player.setSong(NOW_PLAYING_SONG);
 	play();
 }
 
 function nextSong() {
-	if (!(music_analog.paused) && music_analog.currentTime > 0 || AUTO_PLAY_NEXT_SONG_IN_QUEUE) {
-		music_analog.context.suspend();
-		music_analog.currentTime = 0;
+	if (!(player.paused()) && player.currentTime() > 0 || AUTO_PLAY_NEXT_SONG_IN_QUEUE) {
+		player.pause();
 		var next = queue.first();
 		if(next == null) {
-			//
+			pause();
+			player.seek(0);
 		} else {
 			previous_song_queue.append(NOW_PLAYING_SONG);
 			NOW_PLAYING_SONG = next;
 		}
 		AUTO_PLAY_NEXT_SONG_IN_QUEUE = false;
-		last_update = performance.now();
-		music_analog.context.resume();
+		if(next != null) {
+			last_update = performance.now();
+			player.play();
+		}
 	} else {
 		var next = queue.first();
 		if(next == null) {
@@ -597,7 +605,7 @@ document.getElementById('now-playing-shuffle-button').addEventListener('click', 
 var abcd = false;
 function seekPercent(percent) {
 	var clamped = percent< 0?0 :(percent > 1? 1 : percent);
-	//TODO Soon
+	player.seek(clamped);
 
 }
 document.getElementById('now-playing-progress-control-l').addEventListener('mousedown', function() {abcd = true;});
@@ -639,17 +647,16 @@ if (typeof document.hidden !== "undefined") {
 var last_update = 0;
 
 function redrawStuff(ts) {
-	var node = music_analog;
-	if(!node.paused && !document[hidden]) {
-		var len = node.buffer.duration;
-		var percent = music_analog.context.currentTime/len;
+	if(!player.paused() && !document[hidden]) {
+		var len = player.duration();
+		var percent = player.currentTime()/len;
 		document.getElementById('now-playing-art-bw-container').style.height = Math.floor((1-percent)*375)+'pt';
 		document.getElementById('now-playing-progress-control').style.top = Math.floor(((1-percent)*375)+10) + 'pt';
-		var thing = (Math.round(music_analog.context.currentTime - Math.floor(music_analog.context.currentTime/60)*60) + '');
-		thing = Math.floor(music_analog.context.currentTime/60) + ':' + (thing.length < 2? '0':'') + thing;
+		var thing = (Math.round(player.currentTime() - Math.floor(player.currentTime()/60)*60) + '');
+		thing = Math.floor(player.currentTime()/60) + ':' + (thing.length < 2? '0':'') + thing;
 		document.getElementById('now-playing-progress-control-l').innerText = thing;
 		document.getElementById('now-playing-progress-control-r').innerText = thing;
-		//node.volume = document.getElementById('now-playing-volume-slider').value/100;
+		document.getElementById('audioDiv').volume = document.getElementById('now-playing-volume-slider').value/100;
 	}
 }
 

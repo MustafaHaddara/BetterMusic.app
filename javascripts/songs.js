@@ -21,10 +21,10 @@ var SONGS = [
         "id": "song-Voltaic",
         "name": "Voltaic",
         "artist": "Kevin MacLeod (incompetech.com)",
-        "album": "Singles (Licensed under Creative Commons: By Attribution 3.0 License http:\/\/creativecommons.org/licenses/by/3.0/)",
+        "album": "Singles",
         "genre": "Electronica",
-        "albumArt":"../images/album-art-big.jpg",
-        "duration": 180
+        "albumArt":"images/unknown.png",
+        "audio": "audio/Voltaic.mp3"
     }
 ];
 
