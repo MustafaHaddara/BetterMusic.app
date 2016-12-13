@@ -120,6 +120,7 @@ function goToSearchView() {
 	buildSearchHistory();
 	switchSubView('nav-search-view');
 	LIBRARY_STATES.push(function() { switchSubView('nav-search-view'); });
+	document.getElementById('search-input').focus();
 }
 
 function updateNowPlayingSongInformation() {
@@ -337,41 +338,41 @@ var tm = function(ev) {
 }
 
 
-	var mu = function(ev) {
-		var pos = (ev.clientX -initial_pos);
-		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
-		console.log(pos);
-		console.log(sz);
-		if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
-			on_thing.style.left = sz + 'px'; // TODO: Smooth out
-			thing_open = true;
-		} else {
-			if(on_thing !== undefined) {
+var mu = function(ev) {
+	var pos = (ev.clientX -initial_pos);
+	var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
+	console.log(pos);
+	console.log(sz);
+	if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
+		on_thing.style.left = sz + 'px'; // TODO: Smooth out
+		thing_open = true;
+	} else {
+		if(on_thing !== undefined) {
 			initial_pos = 0;
 			on_thing.style.left = '0px'; // TODO: Smooth out
 			on_thing = undefined;
 		}
-		}
-	nop_mu = false;
 	}
+	nop_mu = false;
+}
 
-	var te = function(ev) {
-		var pos = (ev.touches[0].clientX -initial_pos);
-		var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
-		console.log(pos);
-		console.log(sz);
-		if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
-			on_thing.style.left = sz + 'px'; // TODO: Smooth out
-			thing_open = true;
-		} else {
-			if(on_thing !== undefined) {
+var te = function(ev) {
+	var pos = (ev.touches[0].clientX -initial_pos);
+	var sz = parseFloat(getComputedStyle(document.getElementsByClassName('button-thing')[0]).width);
+	console.log(pos);
+	console.log(sz);
+	if (pos >= 0.5*sz && !nop_mu && on_thing !== undefined) {
+		on_thing.style.left = sz + 'px'; // TODO: Smooth out
+		thing_open = true;
+	} else {
+		if(on_thing !== undefined) {
 			initial_pos = 0;
 			on_thing.style.left = '0px'; // TODO: Smooth out
 			on_thing = undefined;
 		}
-		}
-	nop_mu = false;
 	}
+	nop_mu = false;
+}
 
 function addToQueue(div) {
 	queue.append(parseInt(div.dataset.id, 10));
@@ -567,8 +568,10 @@ document.getElementById('search-view-lib-button').addEventListener('click', func
 });
 
 // NAV VIEW
-document.getElementById('search-button').addEventListener('click', function() {
-	searchBy(document.getElementById('search-input').value);
+document.getElementById('search-input').addEventListener('keypress', function(e) {
+	if (e.keyCode === 13) { // enter key
+		searchBy(document.getElementById('search-input').value);
+	}
 });
 
 document.getElementById('mini-bar-next-button').addEventListener('click', function(e) {
