@@ -509,7 +509,9 @@ function buildSongListItem(songObj, mode, counter) {
 			thing_open = false;
 			ev.stopPropagation();
 		}
-
+		var img = document.createElement('img');
+		img.src = 'images/album-art.png';
+		el.appendChild(img);
 		div.addEventListener('mousedown', md);
 		div.addEventListener('touchstart', ts);  // TODO: Totally wrong, additional presses will mess stuff up.
 		el.appendChild(div);
