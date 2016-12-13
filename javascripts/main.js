@@ -53,7 +53,7 @@ function Queue() {
 
 function Player() {
 	var currentSongDivName = "audioDiv";
-	var last_audio = document.getElementById(currentSongDivName).seekable.end(0);
+	var last_audio = 0;
 	this.play = function() {
 		document.getElementById(currentSongDivName).play();
 	}
@@ -64,6 +64,13 @@ function Player() {
 		return document.getElementById(currentSongDivName).currentTime;
 	}
 	this.duration = function() {
+		if(last_audio == 0) {
+			try {
+				last_audio = document.getElementById(currentSongDivName).seekable.end(0);
+			} catch(e) {
+				last_audio = 0;
+			}
+		}
 		return last_audio;
 	}
 	this.seek = function(percent) {
@@ -72,16 +79,8 @@ function Player() {
 	this.setSong = function(idx) {
 		document.getElementById("audioDiv").src = SONGS[idx].audio;
 		document.getElementById("audioDiv").load();
-		document.getElementById("audioDiv").play();
 		document.getElementById("audioDiv").currentTime = 0;
-		var f = true;
-		while(f) {
-			try {
-				last = document.getElementById(currentSongDivName).seekable.end(0);
-			} catch (e) {
-				f = false;
-			}
-		}
+		last_audio = 0;
 	}
 	this.paused = function() {
 		return document.getElementById(currentSongDivName).paused;
@@ -101,6 +100,7 @@ var player = new Player();
 
 document.addEventListener("DOMContentLoaded", function(event) {
 	filterBy('song'); // initial default state
+	player.setSong(2);
 });
 
 // FUNCTIONS
