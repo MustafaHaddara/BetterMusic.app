@@ -170,7 +170,7 @@ function updateUpNextButton() {
 	var xinc = width/5;
 
 	var top = button.offsetTop;
-	var leftOffset = (width - (xinc * q.length)) / 2
+	var leftOffset = (width - (xinc * Math.min(q.length,5))) / 2
 	var left = button.offsetLeft + leftOffset;
 
 	for (var i=0; i<5; i++) {

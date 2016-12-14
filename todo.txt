@@ -1,4 +1,5 @@
 todo: 
+- skipping songs while paused
 - test on chrome and iOS
 - styling for library lists
 - styling for search
