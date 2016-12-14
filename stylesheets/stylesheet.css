@@ -136,6 +136,7 @@ html, body {
 	left: calc(100% - 70pt);
 	z-index: 1;
 	text-align: center;
+	transform-style: preserve-3d;
 }
 
 
@@ -217,6 +218,8 @@ html, body {
 	border-bottom: 1px solid #000000;
 	border-top: 1px solid #000000;
 	overflow: hidden;
+	position: relative;
+	z-index: 2;
 }
 
 #mini-bar > div {
@@ -265,6 +268,8 @@ html, body {
 	display: block;
 	list-style: none;
 	padding: 0;
+	position: relative;
+	z-index: 2;
 }
 
 #tab-bar > li {

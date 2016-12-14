@@ -580,7 +580,6 @@ function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 			div2.addEventListener('mousedown', function() {addToQueue(div2);}); // It never gets mouseup
 			div2.addEventListener('touchstart', function() {addToQueue(div2);}); // It never gets mouseup
 		}
-		var map_thing = {'song-StereoLove': 0, "song-WereInHeaven": 1, "song-Voltaic": 2};
 		div2.dataset.id = songObj.index;
 		div2.dataset.counter = counter;
 		el.appendChild(div2);
@@ -592,8 +591,6 @@ function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 					removefromQueue(div2);
 					playSongById(songObj.index);
 				}
-				//removefromQueue(div2);
-				//playSongById(map_thing[songObj['id']]);
 			}
 		} else {
 			clickCallback = function() {
@@ -602,8 +599,6 @@ function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 				} else {
 					playSongById(songObj.index);
 				}
-				//removefromQueue(div2);
-				//playSongById(map_thing[songObj['id']]);
 			}
 		}
 	} else {
@@ -696,6 +691,13 @@ window.onload = function(event) {
 // TRANSITIONS
 document.getElementById('now-playing-close-button').addEventListener('click', function() {
 	switchView('nav-view');
+	// I have no idea why this works
+	// but somehow it fixes a weird rendering bug 
+	// with the add-to-queue buttons appearing above the miniplayer and tab bar
+	goToSearchView();
+	setTimeout( function() {
+		switchTab('song') 
+	}, 1);
 });
 
 document.getElementById('mini-bar').addEventListener('click', function() {
