@@ -1,4 +1,4 @@
-# INSTRUCTIONS TO RUN# Run Instructions
+# RUN INSTRUCTIONS
 
 ## Usage Instructions:
 
