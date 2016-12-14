@@ -517,9 +517,10 @@ function buildSongListItem(songObj, mode, counter, queue_mode = false) {
 		div.appendChild(artist);
 		if(queue_mode) {
 			var handle = document.createElement('img');
-			handle.src = "images/unknown.png";
-			handle.style.width=20+'pt';
-			handle.style.height=20+'pt';
+			handle.src = "images/list-grip.png";
+			handle.style.width=30+'pt';
+			handle.style.height=30+'pt';
+			handle.style.marginTop=5+'pt';
 			handle.className = "drag-handle";
 			handle.addEventListener('mousedown', function(ev) {ev.stopPropagation();});
 			div.appendChild(handle);

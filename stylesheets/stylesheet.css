@@ -125,7 +125,7 @@ html, body {
 	width: 100%;
 	position:relative;
 	z-index: 3;
-	padding: 0 15pt;
+	padding-left: 15pt;
 	background-color: #FFF;
 }
 
