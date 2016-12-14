@@ -134,6 +134,11 @@ function switchTab(tabName) {
 	filterBy(tabName);
 }
 
+function goToNowPlayingView() {
+	switchView('now-playing-view');
+	updateUpNextButton();
+}
+
 function goToSearchView() {
 	document.getElementById('search-input').value = "";
 	buildSearchHistory();
@@ -681,7 +686,7 @@ document.getElementById('now-playing-close-button').addEventListener('click', fu
 });
 
 document.getElementById('mini-bar').addEventListener('click', function() {
-	switchView('now-playing-view');
+	goToNowPlayingView();
 });
 
 document.getElementById('now-playing-queue-button').addEventListener('click', function() {
@@ -690,7 +695,7 @@ document.getElementById('now-playing-queue-button').addEventListener('click', fu
 });
 
 document.getElementById('queue-close-button').addEventListener('click', function() {
-	switchView('now-playing-view');
+	goToNowPlayingView();
 });
 
 document.getElementById('nav-header-back-button').addEventListener('click', back);
