@@ -167,7 +167,7 @@ function updateUpNextButton() {
 	var top = button.offsetTop;
 	var leftOffset = (width - (xinc * q.length)) / 2
 	var left = button.offsetLeft + leftOffset;
-	
+
 	for (var i=0; i<5; i++) {
 		var img = document.getElementById('now-playing-queue-img-' + i);
 		if (i>=q.length) {
@@ -671,9 +671,9 @@ function buildSearchHistory() {
 
 // EVENT LISTENERS
 // INITIAL STATE
-document.addEventListener("DOMContentLoaded", function(event) {
+window.onload = function(event) {
 	updateNowPlayingSongInformation();
-});
+};
 
 // TRANSITIONS
 document.getElementById('now-playing-close-button').addEventListener('click', function() {
