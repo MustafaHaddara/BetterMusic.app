@@ -1,4 +1,4 @@
-# INSTRUCTIONS TO RUN# Run Instructions
+# RUN INSTRUCTIONS
 
 ## Recommended device
 A computer with a recent version of Google Chrome and a screen resolution height of >900 px
