@@ -486,8 +486,9 @@ input, textarea {
 
 #now-playing-queue-button {
 	height: auto;
-	width: 85%;
-	border: 1pt solid black;
+	width: 60%;
+	border: 1pt solid #777777;
+	background: #CCCCCC;
 }
 
 #now-playing-queue-button > img {

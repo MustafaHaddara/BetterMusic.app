@@ -96,24 +96,6 @@ function Player() {
 }
 
 var queue = new Queue();
-
-queue.append(0);
-queue.append(1);
-queue.append(2);
-queue.append(1);
-queue.append(0);
-queue.append(1);
-queue.append(2);
-queue.append(1);
-queue.append(0);
-queue.append(1);
-queue.append(2);
-queue.append(1);
-queue.append(0);
-queue.append(1);
-queue.append(2);
-queue.append(1);
-
 var previous_song_queue = new Queue();
 
 var player = new Player();
@@ -177,13 +159,25 @@ function updateNowPlayingSongInformation() {
 function updateUpNextButton() {
 	var q = queue.queue()
 	var button = document.getElementById('now-playing-queue-button');
+
+	var emptyMsg = document.getElementById('now-playing-queue-empty-msg');
+	emptyMsg.style.display = 'none';
+
+
+	if (q.length == 0) {
+		emptyMsg.style.display = 'block';
+		for (var i=0; i<5; i++) {
+			document.getElementById('now-playing-queue-img-' + i).style.display = 'none';
+		}
+		return;
+	}
+
 	var width = button.offsetWidth;
-	var height = button.offsetHeight;
+	var height = button.offsetHeight - 2;
 	var xinc = width/5;
 
-	var top = button.offsetTop;
-	var leftOffset = (width - (xinc * Math.min(q.length,5))) / 2
-	var left = button.offsetLeft + leftOffset;
+	var top = button.offsetTop + 1;
+	var left = button.offsetLeft;
 
 	for (var i=0; i<5; i++) {
 		var img = document.getElementById('now-playing-queue-img-' + i);
@@ -197,9 +191,10 @@ function updateUpNextButton() {
 		img.src = SONGS[songId]['albumArt'];
 		// size and position
 		img.style.zIndex = (5-i); // first images higher up
-		img.style.opacity = 1.0 - (0.2*i)  // 1.0, 0.8, 0.6, 0.4, 0.2
-		img.style.height = (height - (6*i)) + 'px';
-		img.style.left = left + (i*xinc) + 'px';
+		img.style.opacity = 1.0 - (0.15*i)  // 1.0, 0.85, 0.7, 0.55, 0.4
+		var imgHeight = (height - (6*i));
+		img.style.height = imgHeight + 'px';
+		img.style.left = left + ((i+1)*width/(q.length+1)) - (imgHeight/2)+ 'px';
 		img.style.top = top + (i*3) + 'px';
 		// show the img
 		img.style.display = 'inline';

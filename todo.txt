@@ -1,6 +1,4 @@
 todo: 
-- skipping songs while paused
-- queue should go to bottom of the screen when it's full
 - test on chrome and iOS
 - styling for library lists
 - styling for search
