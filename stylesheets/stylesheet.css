@@ -557,7 +557,8 @@ input, textarea {
 }
 
 #queue-list-view {
-	height: calc(667pt - 20pt - 49pt - 48pt - 40pt - 3pt);
+	/* master view height - status bar - header - mini player - tabs - borders */
+	height: calc(667pt - 20pt - 40pt - 48pt - 49pt - 3pt);
 	margin: 0;
 	padding: 0;
 	display: block;
