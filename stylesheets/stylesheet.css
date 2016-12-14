@@ -131,6 +131,7 @@ html, body {
 
 .button-thing {
 	width: 70pt;
+	height: 100%;
 	position:absolute;
 	left: calc(100% - 70pt);
 	z-index: 1;
