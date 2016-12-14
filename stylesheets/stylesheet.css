@@ -581,3 +581,8 @@ input, textarea {
 #audioFiles {
 	display: none;
 }
+
+#nav-header-back-button {
+	border: 1pt solid #000000;
+	margin-right: 5%;
+}
