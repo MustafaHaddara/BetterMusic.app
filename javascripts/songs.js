@@ -4,7 +4,7 @@ var SONGS = [
         "id": "id-Chill-Wave",
         "name": "Chill Wave",
         "artist": "Kevin MacLeod",
-        "album": "Unkown",
+        "album": "Unknown",
         "genre": "Funk",
         "albumArt": "images/unknown.png",
         "audio": "audio/Chill Wave.mp3",
