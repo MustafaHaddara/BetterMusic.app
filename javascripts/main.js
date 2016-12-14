@@ -133,6 +133,13 @@ function goToNowPlayingView() {
 	updateUpNextButton();
 }
 
+function goToQueue() {
+	if (queue.queue().length > 0) {
+		buildQueue();
+		switchView('queue-view');
+	}
+}
+
 function goToSearchView() {
 	document.getElementById('search-input').value = "";
 	buildSearchHistory();
@@ -696,8 +703,7 @@ document.getElementById('mini-bar').addEventListener('click', function() {
 });
 
 document.getElementById('now-playing-queue-button').addEventListener('click', function() {
-	buildQueue();
-	switchView('queue-view');
+	goToQueue();
 });
 
 document.getElementById('queue-close-button').addEventListener('click', function() {
