@@ -255,6 +255,7 @@ function nextSong() {
 		} else {
 			previous_song_queue.append(NOW_PLAYING_SONG);
 			NOW_PLAYING_SONG = next;
+			player.setSong(NOW_PLAYING_SONG);
 		}
 	}
 	buildQueue();
@@ -283,6 +284,7 @@ function prevSong() {
 		} else {
 			queue.prepend(NOW_PLAYING_SONG);
 			NOW_PLAYING_SONG=last;
+			player.setSong(NOW_PLAYING_SONG);
 		}
 	}
 	buildQueue();
