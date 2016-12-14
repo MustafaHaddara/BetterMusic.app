@@ -224,6 +224,7 @@ function togglePlay() {
 }
 
 function playSongById(songId) {
+	previous_song_queue.append(NOW_PLAYING_SONG);
 	pause(); // stop current song
 	// find index of song
 	NOW_PLAYING_SONG = songId;
@@ -239,18 +240,13 @@ function nextSong() {
 		if (REPEAT) {
 			queue.append(NOW_PLAYING_SONG);
 		}
+		AUTO_PLAY_NEXT_SONG_IN_QUEUE = false;
 		if(next == null) {
 			pause();
 			player.seek(0);
 		} else {
-			previous_song_queue.append(NOW_PLAYING_SONG);
-			NOW_PLAYING_SONG = next;
-			player.setSong(NOW_PLAYING_SONG);
-		}
-		AUTO_PLAY_NEXT_SONG_IN_QUEUE = false;
-		if(next != null) {
 			last_update = performance.now();
-			player.play();
+			playSongById(next);
 		}
 	} else {
 		var next = queue.first();

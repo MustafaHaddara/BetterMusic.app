@@ -1,5 +1,4 @@
 todo: 
-- playSongById; many cases don't properly store the last song in the previous played song queue
 - test on chrome and iOS
 - styling for library lists
 - styling for search
